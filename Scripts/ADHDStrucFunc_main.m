@@ -11,20 +11,21 @@ close all
 %results)
 
 %Paths, functions and toolboxes
+DataPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Data/';
 addpath(genpath('x_Functions'));
-addpath(genpath('x_Toolbox'));
+addpath(genpath('Toolbox'));
 %path2BN = [pwd,'/x_Toolbox/BrainNet'];
 
 % Atlas
 Atlas = '214';
 
 % Load data
-load([pwd,'/Data/Schaefer',Atlas,'/',Atlas,'Info/Schaefer',Atlas,'_coordinates.mat']);
-load([pwd,'/Data/Schaefer',Atlas,'/',Atlas,'Info/',Atlas,'parcellation_Yeo8Index.mat']);
-load([pwd,'/Data/Schaefer',Atlas,'/','SC/CTRLSC118.mat']);
-load([pwd,'/Data/Schaefer',Atlas,'/','SC/ADHDSC78.mat']);
-load([pwd,'/Data/Schaefer',Atlas,'/','FC/AllFC_ADHD_CTRL.mat']);
-[behav.raw] = xlsread([pwd,'/Data/AdultADHD_FS_Cov_20180510.xlsx']);
+load([DataPath,'Schaefer',Atlas,'/',Atlas,'Info/Schaefer',Atlas,'_coordinates.mat']);
+load([DataPath,'Schaefer',Atlas,'/',Atlas,'Info/',Atlas,'parcellation_Yeo8Index.mat']);
+load([DataPath,'Schaefer',Atlas,'/','SC/CTRLSC118.mat']);
+load([DataPath,'/Schaefer',Atlas,'/','SC/ADHDSC78.mat']);
+load([DataPath,'/Schaefer',Atlas,'/','FC/AllFC_ADHD_CTRL.mat']);
+[behav.raw] = xlsread([DataPath,'/AdultADHD_FS_Cov_20180510.xlsx']);
 
 N(1) = size(CTRLSC,3); %sample size
 N(2) = size(ADHDSC,3);
