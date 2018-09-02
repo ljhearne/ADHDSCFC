@@ -51,7 +51,7 @@ if profile == 1
 elseif profile ==2
     
     patchline(edge_y,edge_z,'edgecolor',col,'linewidth',2,'edgealpha',0.5); hold on
-    clear edge_x edge_y
+    clear edge_y edge_z
     
     % draw other nodes
     scatter(COG(:,2),COG(:,3),'SizeData',s,...

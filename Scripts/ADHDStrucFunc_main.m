@@ -12,6 +12,7 @@ close all
 
 %Paths, functions and toolboxes
 DataPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Data/';
+DocsPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/';
 addpath(genpath('x_Functions'));
 addpath(genpath('Toolbox'));
 %path2BN = [pwd,'/x_Toolbox/BrainNet'];
@@ -54,6 +55,24 @@ behav.Hypr = behav.raw(1:N(2),16);
 
 disp('---BEHAV statistics---');
 disp('no correlation between behaviour and struc-func');
+
+%% Exploratory analysis SC-FC NBS
+% this analysis fundamentally differs from previous as we are now doing the
+% correlation/regression ACROSS subjects, rather than within subjects.
+%SCthresh = round(N(2)*.80);
+SCthresh = 50;
+perms = 100;
+F = 7.5;
+%[MAT,max_sz,max_szNull,nbsP] = NBS_StrucFunc(ADHDSC,CTRLSC,AllFC_AC,F,...
+%    SCthresh,perms,DocsPath,1);
+
+SCthresh = 78;
+perms = 100;
+F = 5;
+
+[NBSMAT,max_sz,max_szNull,nbsP] = NBS_StrucFuncBehav(behav,ADHDSC,CTRLSC,AllFC_AC,F,...
+    SCthresh,perms,DocsPath,1);
+
 %% Figure 1: Structural degree and weighted degree
 figure('Color','w','Position',[50 450 350 350]); hold on
 
@@ -191,27 +210,38 @@ for i = 1:3
         text(.51,.5*-7,'*','HorizontalAlignment','center','FontSize',16)
     end
 end
-%% Figure 5: No relationship with behavior
+%% Figure 5: NBS & Behaviour
 figure('Color','w','Position',[850 50 450 200]); hold on
 
-subplot(1,2,1)
-scatter(r.all.ADHD',behav.Inat,...
-        'MarkerEdgeColor','k',...
-        'MarkerEdgeAlpha', 0.5,...
-        'LineWidth',1); hold on;
-h = lsline;
-set(h,'LineWidth',1, 'Color',cl(2,:));
-set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
-ylabel('Inattention score');
-xlabel('SC-FC correlation');
+for i = 1:N(2)
+    t = ADHDSC(:,:,i);
+    data.SC(i) = mean(t(NBSMAT));
+    t = AllFC_AC(:,:,N(1)+i);
+    data.FC(i) = mean(t(NBSMAT));
+    data.Hyper(i) = behav.Hypr(i);
+    data.Inat(i) = behav.Inat(i);
+end
+data.Int = data.SC .* data.Hyper .* data.Inat;
 
-subplot(1,2,2)
-scatter(r.all.ADHD',behav.Hypr,...
-        'MarkerEdgeColor','k',...
-        'MarkerEdgeAlpha', 0.5,...
-        'LineWidth',1); hold on;
-h = lsline;
-set(h,'LineWidth',1, 'Color',cl(2,:));
-set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
-ylabel('Hyperactivity score');
-xlabel('SC-FC correlation');
+% 
+% subplot(1,2,1)
+% scatter(r.all.ADHD',behav.Inat,...
+%         'MarkerEdgeColor','k',...
+%         'MarkerEdgeAlpha', 0.5,...
+%         'LineWidth',1); hold on;
+% h = lsline;
+% set(h,'LineWidth',1, 'Color',cl(2,:));
+% set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
+% ylabel('Inattention score');
+% xlabel('SC-FC correlation');
+% 
+% subplot(1,2,2)
+% scatter(r.all.ADHD',behav.Hypr,...
+%         'MarkerEdgeColor','k',...
+%         'MarkerEdgeAlpha', 0.5,...
+%         'LineWidth',1); hold on;
+% h = lsline;
+% set(h,'LineWidth',1, 'Color',cl(2,:));
+% set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
+% ylabel('Hyperactivity score');
+% xlabel('SC-FC correlation');
