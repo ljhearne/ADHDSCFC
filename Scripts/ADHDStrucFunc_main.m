@@ -1,7 +1,7 @@
 clearvars
 close all
 
-% Explanation will go here.
+% This the main script for the ADHD structure-function paper.
 
 
 % TO DO:
@@ -74,7 +74,7 @@ disp('no correlation between behaviour and struc-func');
 %     SCthresh,perms,DocsPath,1);
 
 %% Stability test
-for perms = 1:1000
+for perms = 1:100
     for h = 1:3
         for i = 1:50
             
@@ -96,6 +96,9 @@ for perms = 1:1000
 end
 plot(mean(zval,3)); hold on;
 line([0,50],[1.96,1.96]);
+%%
+
+
 %% Figure 1: Structural degree and weighted degree
 figure('Color','w','Position',[50 450 350 350]); hold on
 

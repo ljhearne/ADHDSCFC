@@ -1,4 +1,11 @@
 function [deg,conCount,conStren,hubMat] = Struc_analysis(ADHDSC,CTRLSC,K)
+% [deg,conCount,conStren,hubMat] = Struc_analysis(ADHDSC,CTRLSC,K)
+% this function completes the main structural analysis for the ADHDSCFC
+% paper. It calculates degree (weighted and binary for both groups) as well
+% as connection class count (i.e., the sum of weights within each
+% connection class) connection class strength (the count divided by the
+% number of connections). It calculates hubs according to K (a percentage).
+% The hub code is adapted from Andrew Zalesky.
 
 N(1) = size(CTRLSC,3); %sample size
 N(2) = size(ADHDSC,3);
