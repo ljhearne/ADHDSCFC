@@ -74,34 +74,30 @@ disp('no correlation between behaviour and struc-func');
 %     SCthresh,perms,DocsPath,1);
 
 %% Stability test
-for perms = 1:100
-    for h = 1:3
-        for i = 1:50
-            
-            tmp1=r.hub.CTRL(:,h);
-            tmp2=r.hub.ADHD(:,h);
-            
-            % delete 'i' subjects from each group
-            idx = randperm(length(tmp1));
-            tmp1(idx(1:i))=[];
-            
-            idx = randperm(length(tmp2));
-            tmp2(idx(1:i))=[];
-            
-            [~,~,STATS] = ranksum(tmp1,tmp2);
-            zval(i,h,perms) = STATS.zval;
-        end
+Stab.perms = 1000;
+Stab.subs = 50;
+for perms = 1:Stab.perms
+    for i = 1:Stab.subs
+        
+        tmp1=r.hub.CTRL(:,1);
+        tmp2=r.hub.ADHD(:,1);
+        
+        % delete 'i' subjects from each group
+        idx = randperm(length(tmp1));
+        tmp1(idx(1:i))=[];
+        
+        idx = randperm(length(tmp2));
+        tmp2(idx(1:i))=[];
+        
+        [~,~,STATS] = ranksum(tmp1,tmp2);
+        Stab.zval(i,perms) = STATS.zval;
     end
-    perms
 end
-plot(mean(zval,3)); hold on;
-line([0,50],[1.96,1.96]);
-%%
-
 
 %% Figure 1: Structural degree and weighted degree
 figure('Color','w','Position',[50 450 350 350]); hold on
 
+% add imagesc plots ordered by FC network.
 subplot(1,2,1)
 title('')
 [~, ~, u] = ksdensity(deg.CTRL);
@@ -188,6 +184,7 @@ title('ADHD Hub topology');
 subplot(3,2,6)
 draw_hubconnectome(MAT,COG,ind,cl(2,:),20,1,2);
 axis off
+
 %% Figure 4: SC-FC correlations
 figure('Color','w','Position',[50 50 800 350]); hold on
 data = r; % choose 'logr' or 'r'
@@ -261,3 +258,29 @@ set(h,'LineWidth',1, 'Color',cl(2,:));
 set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
 ylabel('Hyperactivity score');
 xlabel('SC-FC correlation');
+
+%% Figure 6: Stability test
+figure('Color','w','Position',[900 25 400 200]); hold on
+
+for i = 1:Stab.subs
+    d = Stab.zval(i,:);
+    CI = ConfInt(d);
+    %CI = [min(d),max(d)];
+    
+    if min(CI) > 1.96
+        line([i,i],[CI(1),CI(2)],'Color','k');
+        scatter(i,mean(d),'k','filled');
+    else
+        line([i,i],[CI(1),CI(2)],'Color',[0.5 0.5 0.5]);
+        scatter(i,mean(d),'MarkerFaceColor',[0.5 0.5 0.5],'MarkerEdgeColor',[0.5 0.5 0.5]);
+    end
+end
+
+% real data point
+[~,~,STATS] = ranksum(r.hub.CTRL(:,1),r.hub.ADHD(:,1));
+scatter(0,STATS.zval,'MarkerFaceColor',cl(2,:),'MarkerEdgeColor',cl(2,:));
+
+set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
+xlim([0 50]);
+ylabel('Z-score');
+xlabel('Subjects deleted');
