@@ -1,6 +1,6 @@
 clearvars
 close all
-
+clc
 % This the main script for the ADHD structure-function paper.
 
 
@@ -8,14 +8,13 @@ close all
 % - Incorporate NBS into the script if possible (allows for better
 %replicability, we already know the results).
 % - Understand bandwidth property (affects visualization, not the actual
-%results)
+%results)/ improve figures
 
 %Paths, functions and toolboxes
 DataPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Data/';
 DocsPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/';
 addpath(genpath('x_Functions'));
 addpath(genpath('Toolbox'));
-%path2BN = [pwd,'/x_Toolbox/BrainNet'];
 
 % Atlas
 Atlas = '214';
@@ -31,22 +30,28 @@ load([DataPath,'/Schaefer',Atlas,'/','FC/AllFC_ADHD_CTRL.mat']);
 N(1) = size(CTRLSC,3); %sample size
 N(2) = size(ADHDSC,3);
 
+ % Hub definition: top 15% of connections
+K = 0.15;
+
+%results directory
+resultsdir = [DocsPath,'Results/K',num2str(K*100),'/',Atlas,'/'];
+diary(resultsdir
+
 % Colours for plots
 [cb] = cbrewer('qual','Set3',12,'pchip');
 cl(1,:) = [0.5 0.5 0.5];
 cl(2,:) = cb(4,:);
 
+cols = [0, 0, 144
+     255, 255, 255
+     144, 0, 0]./255;
+
 %% Structural analysis
-K = 0.15; % Hub definition: top 15% of connections
 [deg,conCount,conStren,hubMat] = Struc_analysis(ADHDSC,CTRLSC,K);
 
 %% Structure - function analysis
 % by connection class - hub, feeder & periphery.
-[r,logr] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat);
-
-% Thought to test by network but this might introduce methodological
-% concerns regarding how confident we can be in correlations derived from
-% smaller numbers.
+r = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat);
 
 %% Behaviour
 behav.Inat = behav.raw(1:N(2),15);
@@ -74,7 +79,7 @@ disp('no correlation between behaviour and struc-func');
 %     SCthresh,perms,DocsPath,1);
 
 %% Stability test
-Stab.perms = 1000;
+Stab.perms = 100;
 Stab.subs = 50;
 for perms = 1:Stab.perms
     for i = 1:Stab.subs
@@ -95,9 +100,29 @@ for perms = 1:Stab.perms
 end
 
 %% Figure 1: Structural degree and weighted degree
+mkdir(resultsdir);
+
+close all
+figure('Color','w','Position',[50 850 350 150]); hold on
+setCmap(cols);
+
+[~,idx] = sort(Yeo8Index,'ascend'); %sort by FC networks
+
+subplot(1,2,1)
+data = mean(AllFC_AC(:,:,1:N(2)),3);
+data(logical(eye(size(data)))) = 0;
+data = data(idx,idx);
+imagesc(data,[max(max(max(data)))*-1,max(max(max(data)))])
+
+subplot(1,2,2)
+data = mean(AllFC_AC(:,:,N(2)+1:end),3);
+data(logical(eye(size(data)))) = 0;
+data = data(idx,idx);
+imagesc(data,[max(max(max(data)))*-1,max(max(max(data)))])
+saveas(gcf,[resultsdir,'Figure1a_matrices.jpeg']);
+
 figure('Color','w','Position',[50 450 350 350]); hold on
 
-% add imagesc plots ordered by FC network.
 subplot(1,2,1)
 title('')
 [~, ~, u] = ksdensity(deg.CTRL);
@@ -125,8 +150,8 @@ h2 = raincloud_plot('X',deg.ADHDw,'color', cl(2,:),'box_on',1,'alpha',0.5,'cloud
 xlabel('Summed weighted degree');
 set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
 set(gca,'Xtick',0:5000:100000);
-
-%% Figure 2: Structural connection classes
+saveas(gcf,[resultsdir,'Figure1b_degree.jpeg']);
+%% Figure 2a: Structural connection classes
 figure('Color','w','Position',[450 450 525 350]); hold on
 data = conStren; % choose whether to vis connectivity weighted/nonweighted
 
@@ -146,8 +171,8 @@ for i = 1:3
     set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
     %set(gca,'Xtick',0:3000:12000);
 end
-
-%% Figure 3: Group hub topology
+saveas(gcf,[resultsdir,'Figure2a_SChubclasses.jpeg']);
+%% Figure 2b: Group hub topology
 figure('Color','w','Position',[850 450 525 525]); hold on
 
 % have to calculate hubs at the group level
@@ -184,8 +209,8 @@ title('ADHD Hub topology');
 subplot(3,2,6)
 draw_hubconnectome(MAT,COG,ind,cl(2,:),20,1,2);
 axis off
-
-%% Figure 4: SC-FC correlations
+saveas(gcf,[resultsdir,'Figure2b_Hubs.jpeg']);
+%% Figure 3: SC-FC correlations
 figure('Color','w','Position',[50 50 800 350]); hold on
 data = r; % choose 'logr' or 'r'
 xlims = [0 .55]; %same across plots for comparison
@@ -233,8 +258,8 @@ for i = 1:3
         text(.51,.5*-7,'*','HorizontalAlignment','center','FontSize',16)
     end
 end
-
-%% Figure 5: no association between SC-FC and behaviour
+saveas(gcf,[resultsdir,'Figure3_SCFChubclasses.jpeg']);
+%% Figure 4: no association between SC-FC and behaviour
 figure('Color','w','Position',[900 25 400 200]); hold on
 
 subplot(1,2,1)
@@ -258,8 +283,8 @@ set(h,'LineWidth',1, 'Color',cl(2,:));
 set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
 ylabel('Hyperactivity score');
 xlabel('SC-FC correlation');
-
-%% Figure 6: Stability test
+saveas(gcf,[resultsdir,'Figure4_behav.jpeg']);
+%% Figure 5: Stability test
 figure('Color','w','Position',[900 25 400 200]); hold on
 
 for i = 1:Stab.subs
@@ -284,3 +309,4 @@ set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
 xlim([0 50]);
 ylabel('Z-score');
 xlabel('Subjects deleted');
+saveas(gcf,[resultsdir,'Figure5_stabilityTest.jpeg']);

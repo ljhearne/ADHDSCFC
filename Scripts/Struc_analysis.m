@@ -53,8 +53,8 @@ end
 % Stats
 disp('---Connection class statistics---');
 for conn = 1:3
-    [P,~,STATS] = ranksum(conCount.CTRL(:,conn),conCount.ADHD(:,conn));
-    disp(['Hub COUNT    t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+  %  [P,~,STATS] = ranksum(conCount.CTRL(:,conn),conCount.ADHD(:,conn));
+  %  disp(['Hub COUNT    t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
     
     [P,~,STATS] = ranksum(conStren.CTRL(:,conn),conStren.ADHD(:,conn));
     disp(['Hub STRENGTH t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
