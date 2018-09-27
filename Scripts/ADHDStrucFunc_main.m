@@ -4,15 +4,21 @@ clc
 % This the main script for the ADHD structure-function paper.
 
 
-% TO DO:
-% - Incorporate NBS into the script if possible (allows for better
-%replicability, we already know the results).
-% - Understand bandwidth property (affects visualization, not the actual
-%results)/ improve figures
+% Please note:
+% The basic NBS analyses are not incorporated in this script (e.g., healthy
+% control versus ADHD structural matrices).
+% It is a little unclear what the "bandwidth" property does in the
+% raincloud plots - may be worth checking.
 
+
+%%% You need to edit this %%%
 %Paths, functions and toolboxes
 DataPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Data/';
 DocsPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/';
+% Hub definition: top 15% of connections
+K = 0.15;
+%%%%%%%% Stop editing %%%%%%%
+
 addpath(genpath('x_Functions'));
 addpath(genpath('Toolbox'));
 
@@ -29,9 +35,6 @@ load([DataPath,'/Schaefer',Atlas,'/','FC/AllFC_ADHD_CTRL.mat']);
 
 N(1) = size(CTRLSC,3); %sample size
 N(2) = size(ADHDSC,3);
-
- % Hub definition: top 15% of connections
-K = 0.15;
 
 %results directory
 resultsdir = [DocsPath,'Results/K',num2str(K*100),'/',Atlas,'/'];
@@ -66,11 +69,12 @@ disp(['Inat rval = ',num2str(behav.r(1,3:end)),' (all, hub, feed, peri)']);
 disp(['Hyper rval = ',num2str(behav.r(2,3:end)),' (all, hub, feed, peri)']);
 %disp(['Hyper rval = ',num2str(behav.p(2,3:end)),' (all, hub, feed, peri)']);
 disp('no consistent correlations');
-%% Exploratory analysis SC-FC NBS
+%% Exploratory analysis SC-FC NBS (commented out)
 % this analysis fundamentally differs from previous as we are now doing the
 % correlation/regression ACROSS subjects, rather than within subjects.
+
 %SCthresh = round(N(2)*.80);
-% SCthresh = 50;
+
 % perms = 100;
 % F = 7.5;
 % %[MAT,max_sz,max_szNull,nbsP] = NBS_StrucFunc(ADHDSC,CTRLSC,AllFC_AC,F,...
@@ -84,7 +88,7 @@ disp('no consistent correlations');
 %     SCthresh,perms,DocsPath,1);
 
 %% Stability test
-Stab.perms = 1000;
+Stab.perms = 100; % I would reccomend 1000
 Stab.subs = 50;
 for perms = 1:Stab.perms
     for i = 1:Stab.subs

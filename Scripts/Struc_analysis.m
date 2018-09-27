@@ -1,5 +1,6 @@
 function [deg,conCount,conStren,hubMat] = Struc_analysis(ADHDSC,CTRLSC,K)
 % [deg,conCount,conStren,hubMat] = Struc_analysis(ADHDSC,CTRLSC,K)
+
 % this function completes the main structural analysis for the ADHDSCFC
 % paper. It calculates degree (weighted and binary for both groups) as well
 % as connection class count (i.e., the sum of weights within each
