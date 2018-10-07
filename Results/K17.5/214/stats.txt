@@ -14,3 +14,23 @@ Periphery t-test, pval = 0.17395 z = 1.3596
 Inat rval = 0.028333   -0.049495   -0.020507     0.12526 (all, hub, feed, peri)
 Hyper rval = -0.11366   -0.080203    -0.14114   -0.080174 (all, hub, feed, peri)
 no consistent correlations
+---Degree statistics---
+Deg t-test, pval = 0.23513 z = -1.1872
+Weighted deg t-test, pval = 0.8946 z = 0.13249
+---Connection class statistics---
+Hub STRENGTH t-test- k = 0.175, conn = 1 pval = 0.7468 z = 0.32286
+Hub STRENGTH t-test- k = 0.175, conn = 2 pval = 0.090747 z = 1.6915
+Hub STRENGTH t-test- k = 0.175, conn = 3 pval = 0.48329 z = 0.70103
+---STRUC-FUNC statistics---
+Connectome-wide t-test, pval = 0.017758 z = 2.3706
+Connectome-wide t-test (NORMAL), pval = 0.011913 z = 2.5147
+Hub t-test, pval = 0.076524 z = 1.7712
+Hub NORMAL t-test, pval = 0.006672 z = 2.7128
+Feeder t-test, pval = 0.099936 z = 1.6452
+Feeder NORMAL t-test, pval = 0.097312 z = 1.658
+Periphery t-test, pval = 0.17395 z = 1.3596
+Periphery NORMAL t-test, pval = 0.027747 z = 2.2008
+---BEHAV statistics---
+Inat rval = 0.13327    0.019533    0.060004      0.1556 (all, hub, feed, peri)
+Hyper rval = -0.12925    0.021503    -0.23041   -0.055591 (all, hub, feed, peri)
+no consistent correlations

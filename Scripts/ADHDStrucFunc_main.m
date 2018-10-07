@@ -10,20 +10,21 @@ clc
 % It is a little unclear what the "bandwidth" property does in the
 % raincloud plots - may be worth checking.
 
-
+%---------------------------------%
 %%% You need to edit this %%%
+%---------------------------------%
+
 %Paths, functions and toolboxes
 DataPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Data/';
 DocsPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/';
 % Hub definition: top 15% of connections
 K = 0.15;
-%%%%%%%% Stop editing %%%%%%%
-
-addpath(genpath('x_Functions'));
+addpath(genpath('Functions'));
 addpath(genpath('Toolbox'));
-
-% Atlas
 Atlas = '214';
+%---------------------------------%
+%%% Stop editing %%%
+%---------------------------------%
 
 % Load data
 load([DataPath,'Schaefer',Atlas,'/',Atlas,'Info/Schaefer',Atlas,'_coordinates.mat']);
@@ -55,7 +56,7 @@ cols = [0, 0, 144
 
 %% Structure - function analysis
 % by connection class - hub, feeder & periphery.
-r = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat);
+[~,r] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat);
 
 %% Behaviour
 behav.Inat = behav.raw(1:N(2),15);
@@ -111,27 +112,39 @@ end
 %% Figure 1: Structural degree and weighted degree
 diary off
 
+%draw raw structural matrices
 close all
-figure('Color','w','Position',[50 850 350 150]); hold on
+figure('Color','w','Position',[50 850 500 145]); hold on
 setCmap(cols);
 
-[~,idx] = sort(Yeo8Index,'ascend'); %sort by FC networks
+subplot(1,3,1)
+data1 = mean(CTRLSC,3);
+data1(logical(eye(size(data1)))) = 0;
+i = prctile(data1(:),90);
+imagesc(data1,[i*-1,i])
+title('Control')
+set(gca,'FontName', 'Helvetica','FontSize', 12);
 
-subplot(1,2,1)
-data = mean(AllFC_AC(:,:,1:N(2)),3);
+subplot(1,3,2)
+data = mean(ADHDSC,3);
 data(logical(eye(size(data)))) = 0;
-data = data(idx,idx);
-imagesc(data,[max(max(max(data)))*-1,max(max(max(data)))])
+%data = data(idx,idx);
+imagesc(data,[i*-1,i])
+title('ADHD')
+set(gca,'FontName', 'Helvetica','FontSize', 12);
 
-subplot(1,2,2)
-data = mean(AllFC_AC(:,:,N(2)+1:end),3);
+subplot(1,3,3)
+data = data1-data;
 data(logical(eye(size(data)))) = 0;
-data = data(idx,idx);
-imagesc(data,[max(max(max(data)))*-1,max(max(max(data)))])
-saveas(gcf,[resultsdir,'Figure1a_matrices.jpeg']);
+%data = data(idx,idx);
+imagesc(data,[i*-1,i])
+title('Control - ADHD')
+set(gca,'FontName', 'Helvetica','FontSize', 12);
+saveas(gcf,[resultsdir,'Figure1a_matrices.svg']);
 
-figure('Color','w','Position',[50 450 350 350]); hold on
 
+figure('Color','w','Position',[50 450 350 200]); hold on
+% connectome density
 subplot(1,2,1)
 title('')
 [~, ~, u] = ksdensity(deg.CTRL);
@@ -142,10 +155,12 @@ h2 = raincloud_plot('X',deg.ADHD,'color', cl(2,:),'box_on',1,'alpha',0.5,'cloud_
     'box_dodge',1,'box_dodge_amount', .75, 'dot_dodge_amount', .75, 'box_col_match', 0,'line_width',1,...
     'bandwidth',u);
 legend([h1{1} h2{1}], {'Control', 'ADHD'},'Location','best')
-xlabel('Summed degree');
+xlabel('Degree');
 set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
-set(gca,'Xtick',0:3000:12000);
-
+title('Density')
+%set(gca,'Xtick',0:3000:12000);
+hAxes = gca;
+hAxes.XAxis.Exponent = 2;
 subplot(1,2,2)
 title('')
 [~, ~, u] = ksdensity(deg.CTRLw);
@@ -156,12 +171,14 @@ h2 = raincloud_plot('X',deg.ADHDw,'color', cl(2,:),'box_on',1,'alpha',0.5,'cloud
     'box_dodge',1,'box_dodge_amount', .75, 'dot_dodge_amount', .75, 'box_col_match', 0,'line_width',1,...
     'bandwidth',u);
 
-xlabel('Summed weighted degree');
+xlabel('Weighted degree');
 set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
-set(gca,'Xtick',0:5000:100000);
-saveas(gcf,[resultsdir,'Figure1b_degree.jpeg']);
+%set(gca,'Xtick',0:5000:100000);
+hAxes = gca;
+hAxes.XAxis.Exponent = 3;
+saveas(gcf,[resultsdir,'Figure1b_degree.svg']);
 %% Figure 2a: Structural connection classes
-figure('Color','w','Position',[450 450 525 350]); hold on
+figure('Color','w','Position',[450 450 600 200]); hold on
 data = conStren; % choose whether to vis connectivity weighted/nonweighted
 
 classlabel = {'hub','feeder','periphery'};
@@ -180,9 +197,9 @@ for i = 1:3
     set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
     %set(gca,'Xtick',0:3000:12000);
 end
-saveas(gcf,[resultsdir,'Figure2a_SChubclasses.jpeg']);
+saveas(gcf,[resultsdir,'Figure2a_SChubclasses.svg']);
 %% Figure 2b: Group hub topology
-figure('Color','w','Position',[850 450 525 525]); hold on
+figure('Color','w','Position',[850 450 450 450]); hold on
 
 % have to calculate hubs at the group level
 %CTRL
@@ -197,6 +214,7 @@ subplot(3,2,[1 3])
 draw_hubconnectome(MAT,COG,ind,cl(1,:),20,1,1);
 axis off
 title('CTRL Hub topology');
+set(gca,'FontName', 'Helvetica','FontSize', 12);
 
 subplot(3,2,5)
 draw_hubconnectome(MAT,COG,ind,cl(1,:),20,1,2);
@@ -214,13 +232,14 @@ subplot(3,2,[2 4])
 draw_hubconnectome(MAT,COG,ind,cl(2,:),20,1,1);
 axis off
 title('ADHD Hub topology');
+set(gca,'FontName', 'Helvetica','FontSize', 12);
 
 subplot(3,2,6)
 draw_hubconnectome(MAT,COG,ind,cl(2,:),20,1,2);
 axis off
-saveas(gcf,[resultsdir,'Figure2b_Hubs.jpeg']);
+saveas(gcf,[resultsdir,'Figure2b_Hubs.svg']);
 %% Figure 3: SC-FC correlations
-figure('Color','w','Position',[50 50 800 350]); hold on
+figure('Color','w','Position',[50 50 800 200]); hold on
 data = r; % choose 'logr' or 'r'
 xlims = [0 .55]; %same across plots for comparison
 
@@ -311,3 +330,70 @@ xlim([0 50]);
 ylabel('Z-score');
 xlabel('Subjects deleted');
 saveas(gcf,[resultsdir,'Figure5_stabilityTest.jpeg']);
+
+%% Methods figure
+figure('Color','w','Position',[50 850 120 270]); hold on
+setCmap(cols);
+
+[~,idx] = sort(Yeo8Index,'ascend'); %sort by FC networks
+sub = 1;
+subplot(2,1,1)
+data = CTRLSC(:,:,sub);
+data(logical(eye(size(data)))) = 0;
+i = prctile(data(:),90);
+imagesc(data,[i*-1,i])
+title('Sub01 Structure')
+set(gca,'FontName', 'Helvetica','FontSize', 12);
+set(gca,'Xtick',[]);
+set(gca,'Ytick',[]);
+
+subplot(2,1,2)
+data = AllFC_AC(:,:,sub);
+data(logical(eye(size(data)))) = 0;
+i = max(max(max(data)));
+imagesc(data,[i*-1,i])
+title('Sub01 Function')
+set(gca,'FontName', 'Helvetica','FontSize', 12);
+set(gca,'Xtick',[]);
+set(gca,'Ytick',[]);
+saveas(gcf,[resultsdir,'Methods_matrices.svg']);
+
+figure('Color','w','Position',[50 850 150 120]); hold on
+data = CTRLSC(:,:,sub);
+idx = tril(ones(size(data)),sub);
+data(logical(idx)) = 0;
+idx = data>0;
+y = log(data(idx));
+x = AllFC_AC(:,:,1);
+x = x(idx);
+
+scatter(x,y,'Marker','.','SizeData',15,...
+    'MarkerEdgeColor',cl(1,:),'MarkerEdgeAlpha',0.5);
+ylabel('Structure');
+xlabel('Function');
+h = lsline;
+set(h,'LineWidth',2,'Color','k');
+saveas(gcf,[resultsdir,'Methods_correlation.svg']);
+
+%% Supplementary 1: results of the log transform.
+figure('Color','w','Position',[50 850 1000 200]); hold on
+
+data = CTRLSC(:,:,1);
+idx = tril(ones(size(data)),sub);
+
+n = 10;
+for i = 1:n
+    data = ADHDSC(:,:,i);
+    data(logical(idx)) = 0;
+    idx = data>0;
+    y = data(idx);
+    
+    subplot(3,n,i)
+    histogram(y)
+    
+    subplot(3,n,n+i)
+    histogram(log(y))
+    
+    subplot(3,n,n*2+i)
+    histogram(normal_transform(y))
+end

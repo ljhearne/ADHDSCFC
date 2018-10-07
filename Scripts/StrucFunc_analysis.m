@@ -1,4 +1,4 @@
-function [r] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat)
+function [r,rnorm] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat)
 % [r,rlog] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat) this
 % function calculate SC-FC correlations within individual for the whole
 % connectome, then hubs/feeders/peripheries. Every non-0 SC value is added
@@ -23,6 +23,7 @@ for i = 1:N(1)
     
     [r.all.CTRL(i)] = corr(SCn,FCn);
     %[rlog.all.CTRL(i)] = corr(log(SCn),FCn);
+    [rnorm.all.CTRL(i)] = corr(normal_transform(SCn),FCn);
 end
 
 for i = 1:N(2)
@@ -38,6 +39,7 @@ for i = 1:N(2)
     
     [r.all.ADHD(i)] = corr(SCn,FCn);
     %[rlog.all.ADHD(i)] = corr(log(SCn),FCn);
+    [rnorm.all.ADHD(i)] = corr(normal_transform(SCn),FCn);
 end
 
 disp('---STRUC-FUNC statistics---');
@@ -45,7 +47,8 @@ disp('---STRUC-FUNC statistics---');
 disp(['Connectome-wide t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
 %[P,~,STATS] = ranksum(rlog.all.CTRL,rlog.all.ADHD);
 %disp(['Connectome-wide LOG t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
-
+[P,~,STATS] = ranksum(rnorm.all.CTRL,rnorm.all.ADHD);
+disp(['Connectome-wide t-test (NORMAL), pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
 % same analysis but divided by connection class.
 
 for connType = 1:3
@@ -66,6 +69,7 @@ for connType = 1:3
         
         [r.hub.CTRL(i,connType)] = corr(SCn,FCn);
         %[rlog.hub.CTRL(i,connType)] = corr(log(SCn),FCn);
+        [rnorm.hub.CTRL(i,connType)] = corr(normal_transform(SCn),FCn);
     end
     
     for i = 1:N(2)
@@ -85,6 +89,7 @@ for connType = 1:3
         
         [r.hub.ADHD(i,connType)] = corr(SCn,FCn);
         %[rlog.hub.ADHD(i,connType)] = corr(log(SCn),FCn);
+        [rnorm.hub.ADHD(i,connType)] = corr(normal_transform(SCn),FCn);
     end
 end
 
@@ -94,4 +99,7 @@ for connType = 1:3
     disp([classlabel{connType},' t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
     %[P,~,STATS] = ranksum(rlog.hub.CTRL(:,connType),rlog.hub.ADHD(:,connType));
     %disp([classlabel{connType},' LOG t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+    [P,~,STATS] = ranksum(rnorm.hub.CTRL(:,connType),rnorm.hub.ADHD(:,connType));
+    disp([classlabel{connType},' NORMAL t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+end
 end
