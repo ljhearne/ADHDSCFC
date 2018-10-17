@@ -9,6 +9,7 @@ Nodes = size(data,1); %num of nodes in parc.
 Nconn = (Nodes*(Nodes-1))/2;
 
 d = sum(data); %weighted degree
+%bet = betweenness_wei
 ind = (d>=K); % binary list of hubs satisfying K
 ind_ind = find(ind); % find hubs
 
@@ -22,7 +23,6 @@ ind=~ind; ind_ind=find(ind);
 [u,v]=find(triu(data(ind,ind),1));
 ind_peri=sub2ind([Nodes,Nodes],ind_ind(u),ind_ind(v));
 ConCount(3) = length(ind_peri)/2;
-
 
 % calculate feeders (by subtraction)
 ConCount(2) = Nconn - ConCount(3)- ConCount(2);

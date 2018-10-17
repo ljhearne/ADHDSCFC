@@ -1,27 +1,32 @@
 clearvars
 close all
 clc
-% This the main script for the ADHD structure-function paper.
 
+% This the main script for the ADHD structure-function paper. It is linked
+% to the github repo: https://github.com/ljhearne/ADHDSCFC
 
 % Please note:
-% The basic NBS analyses are not incorporated in this script (e.g., healthy
-% control versus ADHD structural matrices).
-% It is a little unclear what the "bandwidth" property does in the
+% - This script assumes the data is organized in a very specific way which
+% is outlined in the github repo
+% - The basic NBS analyses are not incorporated in this script (e.g., healthy
+% control versus ADHD structural matrices). I just used the GUI.
+% - It is a little unclear what the "bandwidth" property does in the
 % raincloud plots - may be worth checking.
 
 %---------------------------------%
-%%% You need to edit this %%%
+%%% Edit this %%%
 %---------------------------------%
 
 %Paths, functions and toolboxes
 DataPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Data/';
 DocsPath = '/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/';
+
 % Hub definition: top 15% of connections
 K = 0.15;
 addpath(genpath('Functions'));
 addpath(genpath('Toolbox'));
 Atlas = '214';
+
 %---------------------------------%
 %%% Stop editing %%%
 %---------------------------------%
@@ -278,7 +283,7 @@ for i = 1:3
     set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
     set(gca,'Xtick',0:0.1:1);
 end
-saveas(gcf,[resultsdir,'Figure3_SCFChubclasses.jpeg']);
+saveas(gcf,[resultsdir,'Figure3_SCFChubclasses.svg']);
 %% Figure 4: no association between SC-FC and behaviour
 figure('Color','w','Position',[900 25 400 200]); hold on
 
@@ -363,7 +368,7 @@ data = CTRLSC(:,:,sub);
 idx = tril(ones(size(data)),sub);
 data(logical(idx)) = 0;
 idx = data>0;
-y = log(data(idx));
+y = normal_transform(data(idx));
 x = AllFC_AC(:,:,1);
 x = x(idx);
 
@@ -376,12 +381,12 @@ set(h,'LineWidth',2,'Color','k');
 saveas(gcf,[resultsdir,'Methods_correlation.svg']);
 
 %% Supplementary 1: results of the log transform.
-figure('Color','w','Position',[50 850 1000 200]); hold on
+figure('Color','w','Position',[50 850 800 400]); hold on
 
 data = CTRLSC(:,:,1);
 idx = tril(ones(size(data)),sub);
 
-n = 10;
+n = 5;
 for i = 1:n
     data = ADHDSC(:,:,i);
     data(logical(idx)) = 0;
@@ -397,3 +402,4 @@ for i = 1:n
     subplot(3,n,n*2+i)
     histogram(normal_transform(y))
 end
+saveas(gcf,[resultsdir,'Example_transform.jpeg']);

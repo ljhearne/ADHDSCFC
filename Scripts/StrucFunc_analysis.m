@@ -43,12 +43,13 @@ for i = 1:N(2)
 end
 
 disp('---STRUC-FUNC statistics---');
-[P,~,STATS] = ranksum(r.all.CTRL,r.all.ADHD);
-disp(['Connectome-wide t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+%[P,~,STATS] = ranksum(r.all.CTRL,r.all.ADHD);
+%disp(['Connectome-wide t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
 %[P,~,STATS] = ranksum(rlog.all.CTRL,rlog.all.ADHD);
 %disp(['Connectome-wide LOG t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
 [P,~,STATS] = ranksum(rnorm.all.CTRL,rnorm.all.ADHD);
-disp(['Connectome-wide t-test (NORMAL), pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+rr = RosenthalR(STATS.zval,N(1)+N(2));
+disp(['Connectome-wide t-test (NORMAL), pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(rr)]);
 % same analysis but divided by connection class.
 
 for connType = 1:3
@@ -95,11 +96,12 @@ end
 
 classlabel = {'Hub','Feeder','Periphery'};
 for connType = 1:3
-    [P,~,STATS] = ranksum(r.hub.CTRL(:,connType),r.hub.ADHD(:,connType));
-    disp([classlabel{connType},' t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+    %[P,~,STATS] = ranksum(r.hub.CTRL(:,connType),r.hub.ADHD(:,connType));
+    %disp([classlabel{connType},' t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
     %[P,~,STATS] = ranksum(rlog.hub.CTRL(:,connType),rlog.hub.ADHD(:,connType));
     %disp([classlabel{connType},' LOG t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
     [P,~,STATS] = ranksum(rnorm.hub.CTRL(:,connType),rnorm.hub.ADHD(:,connType));
-    disp([classlabel{connType},' NORMAL t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+    rr = RosenthalR(STATS.zval,N(1)+N(2));
+    disp([classlabel{connType},' NORMAL t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(rr)]);
 end
 end
