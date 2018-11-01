@@ -223,31 +223,41 @@ end
 
 net = ones(length(MAT),1);
 Nsize = net;
-Nsize(ind) = 5; %hubs
-out = [resultsdir,'Hub_CTRL'];
+Nsize(ind) = 2; %hubs
 
+out = [resultsdir,'Hub_brainrenders.svg'];
 surficeEdgeVis(MATn,COG,net,Nsize,[1,3],out)
 
+% subplot(3,2,[1 3])
+% draw_hubconnectome(MAT,COG,ind,cl(1,:),20,1,1);
+% axis off
+% title('CTRL Hub topology');
+% set(gca,'FontName', 'Helvetica','FontSize', 12);
+
+
+
+% subplot(3,2,5)
+% draw_hubconnectome(MAT,COG,ind,cl(1,:),20,1,2);
+% axis off
+% 
 % % ADHD
-tmp = sort(sum(mean(ADHDSC,3)),'descend');
-Klevel = tmp(round(length(tmp)*K));
-tmp = sum(mean(ADHDSC,3));
-ind = (tmp>=Klevel); % binary list of hubs satisfying K
-ind = find(ind); % find hubs
-[~,~,~,MAT] = find_hubs(mean(ADHDSC,3),Klevel);
-
-MATn = zeros(size(MAT(:,:,1)));
-for i = 1:3
-   idx = logical(MAT(:,:,i));
-   MATn(idx) = 4-i;
-end
-
-net = ones(length(MAT),1);
-Nsize = net;
-Nsize(ind) = 5; %hubs
-out = [resultsdir,'Hub_ADHD'];
-
-surficeEdgeVis(MATn,COG,net,Nsize,[1,3],out)
+% tmp = sort(sum(mean(ADHDSC,3)),'descend');
+% Klevel = tmp(round(length(tmp)*K));
+% tmp = sum(mean(ADHDSC,3));
+% ind = (tmp>=Klevel); % binary list of hubs satisfying K
+% ind = find(ind); % find hubs
+% [~,~,~,MAT] = find_hubs(mean(ADHDSC,3),Klevel);
+% 
+% subplot(3,2,[2 4])
+% draw_hubconnectome(MAT,COG,ind,cl(2,:),20,1,1);
+% axis off
+% title('ADHD Hub topology');
+% set(gca,'FontName', 'Helvetica','FontSize', 12);
+% 
+% subplot(3,2,6)
+% draw_hubconnectome(MAT,COG,ind,cl(2,:),20,1,2);
+% axis off
+% saveas(gcf,[resultsdir,'Figure2b_Hubs.svg']);
 %% Figure 3: SC-FC correlations
 figure('Color','w','Position',[50 50 800 200]); hold on
 data = r; % choose 'logr' or 'r'

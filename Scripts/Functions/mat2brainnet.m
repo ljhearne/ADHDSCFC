@@ -1,11 +1,12 @@
-function [NODE, EDGE] = mat2brainnet(matrix, MNI,network,size)
+function [NODE, EDGE] = mat2brainnet(matrix, MNI,network,size,edgename,nodename)
 %writes a text file for the node and edge for the matrix
 % you have to input the 
 % (1) the matrix (weighted or otherwise depending on what you want)
 % (2) a X by 3 MNI coordinate matrix (they have to be in order)
 % (3) a X by 1 vector with network affilation, put 1's if none
 % (4) a X by 1 vector with the size of each node
-
+% (5) filename for edge eg., net1
+% (6) filename for node
 l=find(sum(matrix,2));
 l=unique(l);
 
@@ -13,7 +14,7 @@ l=unique(l);
 EDGE=matrix;
 %EDGE=matrix(l,l);
 
-fName = 'EDGE.edge';         %# A file name
+fName = edgename;         %# A file name
 fid = fopen(fName,'w');            %# Open the file
 
 dlmwrite(fName,EDGE,'-append',...  %# Print the matrix
@@ -36,7 +37,8 @@ NODE(:,5)=size;
 str='-';
 
 % Write the text file
-f = fopen('NODE.node', 'w');
+fName = nodename; 
+f = fopen(fName, 'w');
 for n = 1:length(NODE)
     fprintf(f, '%d\t%d\t%d\t%d\t%d\t%s\n', NODE(n,1),NODE(n,2),NODE(n,3),NODE(n,4),NODE(n,5),str);
 end
