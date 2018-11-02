@@ -1,4 +1,9 @@
-## Instructions for coauthors
+# Structure function coupling in ADHD
+###
+
+### Contact
+
+### Instructions for coauthors
 Folders should be organized like so:
 ```
 project folder 
