@@ -64,34 +64,77 @@ cols = [0, 0, 144
 [~,r] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat);
 
 %% Behaviour
-behav.Inat = behav.raw(1:N(2),15);
-behav.Hypr = behav.raw(1:N(2),16);
-[behav.r,behav.p] = corr([behav.Inat,behav.Hypr,r.all.ADHD',r.hub.ADHD]);
+% HY's analysis (includes all subjects rather than just ADHD).
+% All_Symp(:,1)~Inattention SNAP-IV (parent-rated); 
+%All_Symp(:,2)~Hyperactivity/Impulsivity SNAP-IV (parent-rated); 
+%All_Symp(:,3)~Inattention ASRS (self-rated); 
+%All_Symp(:,4)~Hyperactivity/Impulsivity ASRS (self-rated); 
+  
+% All_Symp(1:78,:)~ADHD; All_Symp(79:196,:)~CTRL;
+behav = load([DataPath,'BrainBehavior.mat'],'All_Symp');
 
-disp('---BEHAV statistics---');
-disp(['Inat rval = ',num2str(behav.r(1,3:end)),' (all, hub, feed, peri)']);
-%disp(['Inat rval = ',num2str(behav.p(1,3:end)),' (all, hub, feed, peri)']);
+% '999' ~ no available data; 4th CTRL (All_Symp(82,:) ); 
+idx = [1:81,83:196]; % exclude missing data
 
-disp(['Hyper rval = ',num2str(behav.r(2,3:end)),' (all, hub, feed, peri)']);
-%disp(['Hyper rval = ',num2str(behav.p(2,3:end)),' (all, hub, feed, peri)']);
-disp('no consistent correlations');
-%% Exploratory analysis SC-FC NBS (commented out)
-% this analysis fundamentally differs from previous as we are now doing the
-% correlation/regression ACROSS subjects, rather than within subjects.
+% are the distrubutions normal? (no)
+for i = 1:4
+    h=lillietest(behav.All_Symp(idx,i));
+    if h == 1
+        disp(['Distribution of values in behavioural variable ',num2str(i), ' is non-normal']);
+    end
+end
 
-%SCthresh = round(N(2)*.80);
+% transform the behavioural data for PCA
+behav.All_Symp_log=log([behav.All_Symp(idx,1),behav.All_Symp(idx,2),...
+    behav.All_Symp(idx,3),behav.All_Symp(idx,4)]);
+behav.All_Symp_log(behav.All_Symp_log==-Inf)=0; % Inf values = 0
 
-% perms = 100;
-% F = 7.5;
-% %[MAT,max_sz,max_szNull,nbsP] = NBS_StrucFunc(ADHDSC,CTRLSC,AllFC_AC,F,...
-% %    SCthresh,perms,DocsPath,1);
-%
-% SCthresh = 78;
-% perms = 100;
-% F = 5;
-%
-% [NBSMAT,max_sz,max_szNull,nbsP] = NBS_StrucFuncBehav(behav,ADHDSC,CTRLSC,AllFC_AC,F,...
-%     SCthresh,perms,DocsPath,1);
+    %check that this transform worked (it doesn't);
+    for i = 1:4
+        h=lillietest(behav.All_Symp_log(:,i));
+        if h == 1
+            disp(['Log transformed values in var ',num2str(i), ' are still non-normal...']);
+        end
+    end
+
+%try a different transform
+for i = 1:4
+    behav.All_Symp_norm(:,i) = normal_transform(behav.All_Symp(idx,i));
+end
+
+    %check that this transform worked (1/4)
+    for i = 1:4
+        h=lillietest(behav.All_Symp_norm(:,i));
+        if h == 1
+            disp(['Normal transformed values in var ',num2str(i), ' are still non-normal...']);
+        end
+    end
+
+% Reduce dimesionality via PCA
+data = behav.All_Symp(idx,:);
+[behav.PCA.coeff,behav.PCA.score,behav.PCA.latent,behav.PCA.tsquared,behav.PCA.explained] = ...
+    pca(data);
+disp(['1st PCA factor accounts for ',num2str(behav.PCA.explained(1)),' % variance']);
+
+% correlate with imaging (all SC-FC)
+tmp = [r.all.ADHD,r.all.CTRL]';
+[behav.PCACorr.r,behav.PCACorr.p] = corr(behav.PCA.score(:,1),tmp(idx), 'Type','Spearman');
+disp(['Correlation with all SC-FC r = ',num2str(behav.PCACorr.r),', p = ',num2str(behav.PCACorr.p)])
+
+[behav.r,behav.p]=corr(data,tmp(idx),'Type','Spearman'); %supplementary analysis (what if we don't do a PCA?)
+
+% correlate with imaging (hubs only SC-FC)
+tmp = [r.hub.ADHD(:,1);r.hub.CTRL(:,1)];
+[behav.PCACorr.rhub,behav.PCACorr.phub] = corr(behav.PCA.score(:,1),tmp(idx), 'Type','Spearman');
+disp(['Correlation with HUB SC-FC r = ',num2str(behav.PCACorr.rhub),', p = ',num2str(behav.PCACorr.phub)])
+
+[behav.rhub,behav.phub]=corr(data,tmp(idx),'Type','Spearman'); %supplementary analysis 
+disp(['Supplementary result: without PCA each individual behaviour is still',...
+    ' negatively correlated with the SC-FC measure, r = ',...
+    num2str(behav.rhub(1)),' ',num2str(behav.rhub(2)),' ',num2str(behav.rhub(3)),' ',num2str(behav.rhub(4)),...
+    ' and p = ',...
+    num2str(behav.phub(1)),' ',num2str(behav.phub(2)),' ',num2str(behav.phub(3)),' ',num2str(behav.phub(4)),...
+    ]);
 
 %% Stability test
 Stab.perms = 100; % I would reccomend 1000
@@ -289,30 +332,41 @@ for i = 1:3
     set(gca,'Xtick',0:0.1:1);
 end
 saveas(gcf,[resultsdir,'Figure3_SCFChubclasses.svg']);
-%% Figure 4: no association between SC-FC and behaviour
-figure('Color','w','Position',[900 25 400 200]); hold on
+%% Figure 4: Association between SC-FC and behaviour (PCA)
+figure('Color','w','Position',[900 25 300 250]); hold on
 
-subplot(1,2,1)
-scatter(r.all.ADHD',behav.Inat,...
-    'MarkerEdgeColor','k',...
+x = [r.hub.ADHD(:,1);r.hub.CTRL(:,1)];
+x(82) = []; %remember! missing data
+y = behav.PCA.score(:,1);
+
+%ADHD only
+scatter(x(1:78),y(1:78),...
+    'MarkerEdgeColor',cl(2,:),...
+    'MarkerFaceColor',cl(2,:),...
     'MarkerEdgeAlpha', 0.5,...
+    'MarkerFaceAlpha', 0.5,...
     'LineWidth',1); hold on;
+scatter(x(79:end),y(79:end),...
+    'MarkerEdgeColor',cl(1,:),...
+    'MarkerFaceColor',cl(1,:),...
+    'MarkerEdgeAlpha', 0.5,...
+    'MarkerFaceAlpha', 0.5,...
+    'LineWidth',1); hold on;
+
+ax = scatter(x,y,...
+    'MarkerEdgeColor','k',...
+    'MarkerEdgeAlpha', 0,...
+    'LineWidth',1); hold on;
+
 h = lsline;
-set(h,'LineWidth',1, 'Color',cl(2,:));
+
+delete(h(2)); delete(h(3));
+set(h(1),'LineWidth',.1, 'Color','k');
+
 set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
-ylabel('Inattention score');
+ylabel('PCA component loading');
 xlabel('SC-FC correlation');
 
-subplot(1,2,2)
-scatter(r.all.ADHD',behav.Hypr,...
-    'MarkerEdgeColor','k',...
-    'MarkerEdgeAlpha', 0.5,...
-    'LineWidth',1); hold on;
-h = lsline;
-set(h,'LineWidth',1, 'Color',cl(2,:));
-set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
-ylabel('Hyperactivity score');
-xlabel('SC-FC correlation');
 saveas(gcf,[resultsdir,'Figure4_behav.jpeg']);
 %% Figure 5: Stability test
 figure('Color','w','Position',[900 25 400 200]); hold on
@@ -408,3 +462,22 @@ for i = 1:n
     histogram(normal_transform(y))
 end
 saveas(gcf,[resultsdir,'Example_transform.jpeg']);
+
+%% Supplementary 2: results of transforming behaviour
+% note that this makes no difference to the results (improves relationship
+% between PCA and hubs very slightly)
+figure('Color','w','Position',[50 850 800 400]); hold on
+for i = 1:4
+    subplot(3,4,i)
+    hist(behav.All_Symp([1:81,83:end],i)); %missing! data
+    title('non transformed');
+    
+    subplot(3,4,i+4)
+    hist(behav.All_Symp_log(:,i));
+    title('log transformed');
+    
+    subplot(3,4,i+8)
+    hist(behav.All_Symp_norm(:,i));
+    title('normal transformed');
+end
+saveas(gcf,[resultsdir,'Example_behaviour_transform.jpeg']);
