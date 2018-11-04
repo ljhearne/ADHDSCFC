@@ -1,17 +1,46 @@
-function [ConCount,ConStren,ConStrenNorm,MAT_out] = find_hubs(data,K)
+function [ConCount,ConStren,ConStrenNorm,MAT_out,hublist] = find_hubs(data,K)
 
-%Code from Andrew Z. finds hub nodes and assigns labels to all connections
-%in the matrix
-% enter data for one participant (2d node by node matrix) and K-level for
-% defining hub. Matrcies should be fully weighted and undirected (i.e. /2).
+%This code idenitifies hubs and then the different connection classes, you
+%input a node x node matrix and the K (number of nodes) level. It uses 4
+%different graph metrics to define hubs (see below).
 
 Nodes = size(data,1); %num of nodes in parc.
 Nconn = (Nodes*(Nodes-1))/2;
 
-d = sum(data); %weighted degree
-%bet = betweenness_wei
-ind = (d>=K); % binary list of hubs satisfying K
-ind_ind = find(ind); % find hubs
+%% Adaptation of Hsiang-Yuan's code to detect hubs across graph metrics
+
+%degree
+degree = sum(data>0);            %do graph metric
+degree_rank = tiedrank(degree);  %rank graph metric
+ranks(:,1) = degree_rank;        %concatenate to matrix
+
+%weighted degree
+weighted_degree(:,1) = sum(data);
+weighted_degree_rank = tiedrank(weighted_degree);
+ranks(:,2) = weighted_degree_rank; 
+
+%betweeness
+betweeness(:,1) = betweenness_wei(data);
+betweeness_rank = tiedrank(betweeness);
+ranks(:,3) = betweeness_rank; 
+
+%nodal communicability
+nodal_communicability(:,1) = subgraph_centrality(data);
+nodal_communicability = transpose(nodal_communicability);
+nodal_communicability_rank = tiedrank(nodal_communicability);
+ranks(:,4) = nodal_communicability_rank;
+
+%combine the metrics
+AVGranks = mean(ranks,2); %average across the ranks
+sortAVGranks = sortrows(AVGranks,'descend');
+
+%% Adaptation of Andrew's code to organise hubs, feeders and periphery connections
+
+%find and index the hubs (top K % of measure defined above
+Klevel = sortAVGranks(floor(K*Nodes));
+ind = (AVGranks>=Klevel);
+ind_ind = find(ind);
+hublist=ind; %save for later
 
 %list hub-hubs
 [u,v] = find(triu(data(ind,ind),1));

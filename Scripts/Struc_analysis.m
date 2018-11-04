@@ -1,4 +1,4 @@
-function [deg,conCount,conStren,hubMat] = Struc_analysis(ADHDSC,CTRLSC,K)
+function [deg,conCount,conStren,hubMat,hublist] = Struc_analysis(ADHDSC,CTRLSC,K)
 % [deg,conCount,conStren,hubMat] = Struc_analysis(ADHDSC,CTRLSC,K)
 
 % this function completes the main structural analysis for the ADHDSCFC
@@ -39,18 +39,12 @@ disp(['Weighted deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r 
 %% Hubs
 
 %Klevel(1) = M+(1.5*S); %1.5 STD above mean
-
-
 for i = 1:N(1)
-    tmp = sort(sum(CTRLSC(:,:,i)),'descend');
-    Klevel = tmp(round(length(tmp)*K));
-    [conCount.CTRL(i,:),~,conStren.CTRL(i,:),hubMat.CTRL(:,:,:,i)] = find_hubs(CTRLSC(:,:,i),Klevel);
+    [conCount.CTRL(i,:),~,conStren.CTRL(i,:),hubMat.CTRL(:,:,:,i),hublist.CTRL(i,:)] = find_hubs(CTRLSC(:,:,i),K);
 end
 
 for i = 1:N(2)
-    tmp = sort(sum(ADHDSC(:,:,i)),'descend');
-    Klevel = tmp(round(length(tmp)*K));
-    [conCount.ADHD(i,:),~,conStren.ADHD(i,:),hubMat.ADHD(:,:,:,i)] = find_hubs(ADHDSC(:,:,i),Klevel);
+    [conCount.ADHD(i,:),~,conStren.ADHD(i,:),hubMat.ADHD(:,:,:,i),hublist.ADHD(i,:)] = find_hubs(ADHDSC(:,:,i),K);
 end
 
 % Stats

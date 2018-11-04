@@ -2,14 +2,14 @@
 Deg t-test, pval = 0.23513 z = -1.1872 r = -0.084803
 Weighted deg t-test, pval = 0.8946 z = 0.13249 r = 0.0094634
 ---Connection class statistics---
-Hub STRENGTH t-test- k = 0.125, conn = 1 pval = 0.77423 z = 0.28684 r = 0.020489
-Hub STRENGTH t-test- k = 0.125, conn = 2 pval = 0.2321 z = 1.195 r = 0.085355
-Hub STRENGTH t-test- k = 0.125, conn = 3 pval = 0.34576 z = 0.94285 r = 0.067347
+Hub STRENGTH t-test- k = 0.125, conn = 1 pval = 0.85406 z = -0.18394 r = -0.013139
+Hub STRENGTH t-test- k = 0.125, conn = 2 pval = 0.55492 z = -0.59041 r = -0.042172
+Hub STRENGTH t-test- k = 0.125, conn = 3 pval = 0.19879 z = 1.285 r = 0.091786
 ---STRUC-FUNC statistics---
 Connectome-wide t-test (NORMAL), pval = 0.011913 z = 2.5147 r = 0.17962
-Hub NORMAL t-test, pval = 0.006269 z = 2.7334 r = 0.19524
-Feeder NORMAL t-test, pval = 0.10262 z = 1.6323 r = 0.11659
-Periphery NORMAL t-test, pval = 0.030797 z = 2.1597 r = 0.15426
+Hub NORMAL t-test, pval = 0.43342 z = 0.78335 r = 0.055954
+Feeder NORMAL t-test, pval = 0.0056162 z = 2.7694 r = 0.19781
+Periphery NORMAL t-test, pval = 0.047748 z = 1.9796 r = 0.1414
 Distribution of values in behavioural variable 1 is non-normal
 Distribution of values in behavioural variable 2 is non-normal
 Distribution of values in behavioural variable 3 is non-normal
@@ -19,12 +19,7 @@ Log transformed values in var 2 are still non-normal...
 Log transformed values in var 3 are still non-normal...
 Log transformed values in var 4 are still non-normal...
 Normal transformed values in var 2 are still non-normal...
-[Warning: Columns of X are linearly dependent to within machine precision.
-Using only the first 4 components to compute TSQUARED.] 
-[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('pca>localTSquared', '/Applications/MATLAB_R2018a.app/toolbox/stats/stats/pca.m', 511)" style="font-weight:bold">pca>localTSquared</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2018a.app/toolbox/stats/stats/pca.m',511,0)">line 511</a>)
-  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('pca', '/Applications/MATLAB_R2018a.app/toolbox/stats/stats/pca.m', 357)" style="font-weight:bold">pca</a> (<a href="matlab: opentoline('/Applications/MATLAB_R2018a.app/toolbox/stats/stats/pca.m',357,0)">line 357</a>)
-  In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ADHDStrucFunc_main', '/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/Scripts/ADHDStrucFunc_main.m', 115)" style="font-weight:bold">ADHDStrucFunc_main</a> (<a href="matlab: opentoline('/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/Scripts/ADHDStrucFunc_main.m',115,0)">line 115</a>)] 
-1st PCA factor accounts for 87.6193 % variance
-Correlation with all SC-FC r = -0.15602, p = 0.029407
-Correlation with HUB SC-FC r = -0.1749, p = 0.014464
-Supplementary result: without PCA each individual behaviour is still negatively correlated with the SC-FC measure, r = -0.18101 -0.14342 -0.14542 -0.15968 and p = 0.01133 0.045471 0.042513 0.025758
+1st PCA factor accounts for 80.7173 % variance
+Correlation with all SC-FC r = -0.15742, p = 0.027965
+Correlation with HUB SC-FC r = -0.20419, p = 0.0041926
+Supplementary result: without PCA each individual behaviour is still negatively correlated with the SC-FC measure, r = -0.20607 -0.1773 -0.15516 -0.21601 and p = 0.0038502 0.01315 0.030323 0.0024223
