@@ -1,0 +1,31 @@
+---Degree statistics---
+Deg t-test, pval = 0.23513 z = -1.1872 r = -0.084803
+Weighted deg t-test, pval = 0.8946 z = 0.13249 r = 0.0094634
+---Connection class statistics---
+Hub STRENGTH t-test- k = 0.125, conn = 1 pval = 0.85406 z = -0.18394 r = -0.013139
+Hub STRENGTH t-test- k = 0.125, conn = 2 pval = 0.55492 z = -0.59041 r = -0.042172
+Hub STRENGTH t-test- k = 0.125, conn = 3 pval = 0.19879 z = 1.285 r = 0.091786
+---STRUC-FUNC statistics---
+Connectome-wide t-test (NORMAL), pval = 0.011913 z = 2.5147 r = 0.17962
+Hub NORMAL t-test, pval = 0.43342, pbonf(3) = 1.3003, z = 0.78335 r = 0.055954
+Feeder NORMAL t-test, pval = 0.0056162, pbonf(3) = 0.016849, z = 2.7694 r = 0.19781
+Periphery NORMAL t-test, pval = 0.047748, pbonf(3) = 0.14324, z = 1.9796 r = 0.1414
+---BEHAV statistics---
+Distribution of values in behavioural variable 1 is non-normal
+Distribution of values in behavioural variable 2 is non-normal
+Distribution of values in behavioural variable 3 is non-normal
+Distribution of values in behavioural variable 4 is non-normal
+Log transformed values in var 1 are still non-normal...
+Log transformed values in var 2 are still non-normal...
+Log transformed values in var 3 are still non-normal...
+Log transformed values in var 4 are still non-normal...
+Normal transformed values in var 2 are still non-normal...
+1st PCA factor accounts for 80.7173 % variance
+Correlation with all SC-FC r = -0.18021, p = 0.011701
+Correlation with Feeder SC-FC r = -0.23347, p = 0.0010207
+Supplementary result: without PCA each individual behaviour is still negatively correlated with the SC-FC measure, r = -0.20607 -0.1773 -0.15516 -0.21601 and p = 0.0038502 0.01315 0.030323 0.0024223
+Number of NaNs in feeder matrix across all participants:
+     3     0     0
+     0     1     0
+     0     0     0
+

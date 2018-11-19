@@ -7,7 +7,7 @@ function behav = Behav_analysis(r,behav)
 
 % All_Symp(1:78,:)~ADHD; All_Symp(79:196,:)~CTRL;
 %behav = load([DataPath,'BrainBehavior.mat'],'All_Symp');
-
+disp('---BEHAV statistics---');
 % '999' ~ no available data; 4th CTRL (All_Symp(82,:) );
 idx = [1:81,83:196]; % exclude missing data
 
@@ -54,14 +54,14 @@ disp(['1st PCA factor accounts for ',num2str(behav.PCA.explained(1)),' % varianc
 
 % correlate with imaging (all SC-FC)
 tmp = [r.all.ADHD,r.all.CTRL]';
-[behav.PCACorr.r,behav.PCACorr.p] = corr(behav.PCA.score(:,1),tmp(idx), 'Type','Spearman');
+[behav.PCACorr.r,behav.PCACorr.p] = corr(behav.PCA.score(:,1),tmp(idx), 'Type','Pearson');
 disp(['Correlation with all SC-FC r = ',num2str(behav.PCACorr.r),', p = ',num2str(behav.PCACorr.p)])
 
 [behav.r,behav.p]=corr(data,tmp(idx),'Type','Spearman'); %supplementary analysis (what if we don't do a PCA?)
 
 % correlate with imaging (hubs only SC-FC)
 tmp = [r.hub.ADHD(:,2);r.hub.CTRL(:,2)];
-[behav.PCACorr.rhub,behav.PCACorr.phub] = corr(behav.PCA.score(:,1),tmp(idx), 'Type','Spearman');
+[behav.PCACorr.rhub,behav.PCACorr.phub] = corr(behav.PCA.score(:,1),tmp(idx), 'Type','Pearson');
 disp(['Correlation with Feeder SC-FC r = ',num2str(behav.PCACorr.rhub),', p = ',num2str(behav.PCACorr.phub)])
 
 [behav.rhub,behav.phub]=corr(data,tmp(idx),'Type','Spearman'); %supplementary analysis

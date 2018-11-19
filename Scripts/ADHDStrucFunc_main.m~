@@ -459,27 +459,22 @@ if FIGS ==1
 %     saveas(gcf,[resultsdir,'Figure5_stabilityTest.jpeg']);
 %     
     %% Feeder follow up
-    figure('Color','w','Position',[50 850 300 300]); hold on
+    figure('Color','w','Position',[50 850 600 200]); hold on
     
-    ncols = [255, 255, 255
+    cols = [255, 255, 255
     199.5, 127.5, 127.5
     144, 0, 0]./255;
     
-    setCmap(ncols);
+    setCmap(cols);
     
     tmp = mean(r.feed.CTRL,3);
     tmp2 = mean(r.feed.ADHD,3);
-    data = tmp - tmp2;
-    h=imagesc(data,[0.015,0.025]);
+    data = tmp-tmp2;
+    imagesc(data)
     colorbar
-    
-    %title('Control > ADHD')
-    %set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
-    set(gca,'XTick',1:3,'XTickLabel', {'Control' 'Default-mode' 'Sensory'});
-    xtickangle(45);
-    set(gca,'YTick',1:3,'YTickLabel', {'Control' 'Default-mode' 'Sensory'});
-    saveas(gcf,[resultsdir,'Feederfollowup.jpeg']);
-    
+    title('Control > ADHD')
+    set(gca,'FontName', 'Helvetica','FontSize', 12);
+
     %% Methods figure
     figure('Color','w','Position',[50 850 120 270]); hold on
     setCmap(cols);

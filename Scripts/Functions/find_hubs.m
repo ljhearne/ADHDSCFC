@@ -45,16 +45,16 @@ hublist=ind; %save for later
 %list hub-hubs
 [u,v] = find(triu(data(ind,ind),1));
 ind_rich = sub2ind([Nodes,Nodes],ind_ind(u),ind_ind(v));
-ConCount(1) = length(ind_rich)/2; % number of connections
+%ConCount(1) = length(ind_rich)/2; % number of connections
 
 % list periphery (using the opposite index).
 ind=~ind; ind_ind=find(ind);
 [u,v]=find(triu(data(ind,ind),1));
 ind_peri=sub2ind([Nodes,Nodes],ind_ind(u),ind_ind(v));
-ConCount(3) = length(ind_peri)/2;
+%ConCount(3) = length(ind_peri)/2;
 
 % calculate feeders (by subtraction)
-ConCount(2) = Nconn - ConCount(3)- ConCount(2);
+%ConCount(2) = Nconn - ConCount(3)- ConCount(2);
 
 % rich club calculation
 MAT.hub = zeros(Nodes,Nodes);
@@ -70,10 +70,18 @@ MAT_out(:,:,1) = MAT.hub;
 MAT_out(:,:,2) = MAT.feed;
 MAT_out(:,:,3) = MAT.peri;
 
-% Connectivity strength
-ConStren(1) = sum(data(logical(MAT.hub)))/2; % total strength of connections
-ConStren(2) = sum(data(logical(MAT.feed)))/2; % total strength of connections
-ConStren(3) = sum(data(logical(MAT.peri)))/2; % total strength of connections
+% Count the number of edges in each class accounting for sparsity of the
+% matrix.
+idx = data>0;
+for i = 1:3
+	tmp = idx(logical(MAT_out(:,:,i)));  
+    ConCount(i) = sum(tmp);
+end
+
+% Connectivity strength (summed)
+ConStren(1) = sum(data(logical(MAT.hub))); % total strength of connections
+ConStren(2) = sum(data(logical(MAT.feed))); % total strength of connections
+ConStren(3) = sum(data(logical(MAT.peri))); % total strength of connections
 
 ConStrenNorm = ConStren ./ConCount;
 end

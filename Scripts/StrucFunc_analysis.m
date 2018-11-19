@@ -102,6 +102,6 @@ for connType = 1:3
     %disp([classlabel{connType},' LOG t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
     [P,~,STATS] = ranksum(rnorm.hub.CTRL(:,connType),rnorm.hub.ADHD(:,connType));
     rr = RosenthalR(STATS.zval,N(1)+N(2));
-    disp([classlabel{connType},' NORMAL t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(rr)]);
+    disp([classlabel{connType},' NORMAL t-test, pval = ',num2str(P),', pbonf(3) = ',num2str(P*3),', z = ',num2str(STATS.zval),' r = ',num2str(rr)]);
 end
 end
