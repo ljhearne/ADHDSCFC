@@ -1,5 +1,6 @@
 function behav = Behav_analysis(r,behav)
 % HY's analysis (includes all subjects rather than just ADHD).
+
 % All_Symp(:,1)~Inattention SNAP-IV (parent-rated);
 %All_Symp(:,2)~Hyperactivity/Impulsivity SNAP-IV (parent-rated);
 %All_Symp(:,3)~Inattention ASRS (self-rated);
@@ -59,7 +60,7 @@ disp(['Correlation with all SC-FC r = ',num2str(behav.PCACorr.r),', p = ',num2st
 
 [behav.r,behav.p]=corr(data,tmp(idx),'Type','Spearman'); %supplementary analysis (what if we don't do a PCA?)
 
-% correlate with imaging (hubs only SC-FC)
+% correlate with imaging (feeder only SC-FC)
 tmp = [r.hub.ADHD(:,2);r.hub.CTRL(:,2)];
 [behav.PCACorr.rhub,behav.PCACorr.phub] = corr(behav.PCA.score(:,1),tmp(idx), 'Type','Pearson');
 disp(['Correlation with Feeder SC-FC r = ',num2str(behav.PCACorr.rhub),', p = ',num2str(behav.PCACorr.phub)])

@@ -10,8 +10,6 @@ clc
 % is outlined in the github repo
 % - The basic NBS analyses are not incorporated in this script (e.g., healthy
 % control versus ADHD structural matrices). I just used the GUI.
-% - It is a little unclear what the "bandwidth" property does in the
-% raincloud plots - may be worth checking.
 
 %---------------------------------%
 %---------------------------------%
@@ -29,6 +27,7 @@ Atlas = 'Schaefer214';
 %Atlas = 'Shen268';
 %Atlas = 'Brainnetome_246';
 FIGS = 0; %draw figures?
+SUPP = 0; %do supplemental analyses?
 
 %---------------------------------%
 %---------------------------------%
@@ -43,7 +42,6 @@ N(1) = size(CTRLSC,3); %sample size
 N(2) = size(ADHDSC,3);
 
 % Brainetome ROIs 117,118 should be deleted
-
 if strcmp(Atlas,'Brainnetome_246')
     tmp = [117,118];
     COG(tmp,:) =      [];
@@ -63,6 +61,7 @@ elseif strcmp(Atlas,'Shen268')
 end
 
 disp('Data is loaded');
+
 %results directory
 resultsdir = [DocsPath,'Results/K',num2str(K*100),'/',Atlas,'/'];
 mkdir(resultsdir);
@@ -81,23 +80,14 @@ cols = [0, 0, 144
 %% Structural analysis
 [deg,conCount,conStren,hubMat,hublist] = Struc_analysis(ADHDSC,CTRLSC,K);
 
-%count hubs within each functional network
-for i = 1:max(Yeo8Index)
-    idx = Yeo8Index==i;
-    
-    tmp = hublist.CTRL(:,idx);
-    hublist.CTRLcount(:,i) = sum(tmp,2);
-    
-    tmp = hublist.ADHD(:,idx);
-    hublist.ADHDcount(:,i) = sum(tmp,2);
-end
-
 %% Structure - function analysis
 % by connection class - hub, feeder & periphery.
 [~,r] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat);
 
 %% Behaviour
-% HY's analysis (includes all subjects rather than just ADHD).
+% HY's analysis (includes all subjects)
+
+%for reference
 %All_Symp(:,1)~Inattention SNAP-IV (parent-rated);
 %All_Symp(:,2)~Hyperactivity/Impulsivity SNAP-IV (parent-rated);
 %All_Symp(:,3)~Inattention ASRS (self-rated);
@@ -109,163 +99,181 @@ behav = Behav_analysis(r,behav);
 %% Functional follow up
 % Feeder's seem to be the most interesting connection class. Here are are
 % doing a follow up analysis where we split each feeder SC-FC vector into
-% functional networks and basically redo the analysis.
+% functional networks and redo the analysis.
 
-% To ensure we have enough edges in our networks we add together all the
-% control networks.
-newYeoIndex = zeros(size(Yeo8Index));
-idx = Yeo8Index==3; newYeoIndex(idx) = 1; % Task-positive
-idx = Yeo8Index==4; newYeoIndex(idx) = 1;
-idx = Yeo8Index==6; newYeoIndex(idx) = 1;
-idx = Yeo8Index==7; newYeoIndex(idx) = 2; % Default-mode
-idx = Yeo8Index==1; newYeoIndex(idx) = 3; % Sensory
-idx = Yeo8Index==2; newYeoIndex(idx) = 3;
+feed = Func_followup(CTRLSC,ADHDSC,AllFC_AC,Yeo8Index,hubMat);
 
-% Controls
-for i = 1:N(1)
+diary off
+
+%% Supplementary Tables
+if SUPP ==1
     
-    feedidx = hubMat.CTRL(:,:,2,i); %index of feeders for this p
-
-    for j = 1:max(newYeoIndex)
-        for k = 1:max(newYeoIndex)
-            netidx = zeros(size(feedidx));
-
-            net1 = newYeoIndex==j;
-            net2 = newYeoIndex==k;
+    % Supplementary Table 1
+    Stable = zeros(length(COG),9);
+    Stable(:,1) = 1:length(COG);
+    Stable(:,2:4) = round(COG,1);
+    Stable(:,5) = Yeo8Index;
+    
+    %hubs - group
+    [~,~,~,~,ind] = find_hubs(mean(CTRLSC,3),K);
+    Stable(:,6) = ind;
+    
+    [~,~,~,~,ind] = find_hubs(mean(ADHDSC,3),K);
+    Stable(:,8) = ind;
+    
+    %hubs - individual
+    ind = (sum(hublist.CTRL,1)/N(1))*100;
+    Stable(:,7) = round(ind,1);
+    
+    ind = (sum(hublist.ADHD,1)/N(2))*100;
+    Stable(:,9) = round(ind,1);
+    
+    l = {'Node','X' 'Y' 'Z' 'Network' 'GroupC' 'IndividualC' 'GroupA' 'IndividualA'};
+    Stable = array2table(Stable,'VariableNames',l);
+    writetable(Stable,[resultsdir,'SuppTable1.csv']);
+    
+    % Supplementary Table 2
+    Stable = zeros(10,3);
+    paths = {[DocsPath,'Results/K',num2str(K*100),'/Schaefer214/stats.txt'],...
+        [DocsPath,'Results/K',num2str(K*100),'/Shen268/stats.txt'],...
+        [DocsPath,'Results/K',num2str(K*100),'/Brainnetome_246/stats.txt']};
+    for i = 1:length(paths)
+        
+        Stable(:,i) = Supplement_stats(paths{i},K);
+    end
+    
+    l = {'Schaefer214','Shen268','Brainnetome246'};
+    r = {'Degree (p)','Weighted degree (p)','SC Hubs (p)','SC Feeder (p)','SC Periphery (p)',...
+        'SC-FC (p)','SC-FC Hubs (p)','SC-FC Feeders (p)','SC-FC Periphery (p)',...
+        'Feeder-behaviour correlation (r)'};
+    Stable = array2table(Stable,'VariableNames',l,'RowNames',r);
+    writetable(Stable,[resultsdir,'SuppTable2.xlsx'],'WriteRowNames',1);
+    
+    % Supplementary Table 3
+    Stable = zeros(10,3);
+    paths = {[DocsPath,'Results/K12.5/',Atlas,'/stats.txt'],...
+        [DocsPath,'Results/K15/',Atlas,'/stats.txt'],...
+        [DocsPath,'Results/K17.5/',Atlas,'/stats.txt']};
+    nK = [.125, .15,.175];
+    for i = 1:length(paths)
+        Stable(:,i) = Supplement_stats(paths{i},nK(i));
+    end
+    
+    l = {'hub125','hub15','hub175'};
+    Stable = array2table(Stable,'VariableNames',l,'RowNames',r);
+    writetable(Stable,[resultsdir,'SuppTable3.xlsx'],'WriteRowNames',1);
+    
+    %Supplementary Table 4
+    Stable = zeros(5,4);
+    Stable(1:4,:) = round(behav.PCA.coeff,2);
+    Stable(5,:) = round(behav.PCA.explained,2);
+    l = {'Component1','Component2','Component3','Component4',};
+    r = {'Inattention SNAP-IV (parent-rated)',...
+        'Hyperactivity/Impulsivity SNAP-IV (parent-rated)',...
+        'Inattention ASRS (self-rated)',...
+        'Hyperactivity/Impulsivity ASRS (self-rated)',...
+        'Variance explained'};
+    
+    Stable = array2table(Stable,'VariableNames',l,'RowNames',r);
+    writetable(Stable,[resultsdir,'SuppTable4.xlsx'],'WriteRowNames',1);
+    
+    %Supplementary Table 5
+    Stable = [];
+    Stable = round(behav.rhub,2);
+    Stable(:,2) = round(behav.phub,4);
+    l = {'Correlation','p'};
+    r(5) = [];
+    
+    Stable = array2table(Stable,'VariableNames',l,'RowNames',r);
+    writetable(Stable,[resultsdir,'SuppTable5.xlsx'],'WriteRowNames',1);
+    
+    % Supplementary stability test
+    Stab.perms = 100; % I would reccomend 1000
+    Stab.subs = 50;
+    
+    for perms = 1:Stab.perms
+        for i = 1:Stab.subs
             
-            netidx(net1,net2) = 1;
-            netidx(net2,net1) = 1;
+            tmp1=r.hub.CTRL(:,2);
+            tmp2=r.hub.ADHD(:,2);
             
-            % find the common between feeders and network idx
-            new_idx = [];
-            new_idx = netidx + feedidx == 2;
+            % delete 'i' subjects from each group
+            idx = randperm(length(tmp1));
+            tmp1(idx(1:i))=[];
             
-            SC = CTRLSC(:,:,i);
-            SC = SC(new_idx);
-            FC = AllFC_AC(:,:,i+N(2));
-            FC = FC(new_idx);
+            idx = randperm(length(tmp2));
+            tmp2(idx(1:i))=[];
             
-            idx = SC(:) ~=0; %index not zero values
-            SCn = SC(idx);
-            FCn = FC(idx);
-            
-            if length(SCn) > 50
-                [r.feed.CTRL(j,k,i)] = corr(normal_transform(SCn),FCn);
-            else
-                [r.feed.CTRL(j,k,i)] = NaN;
-            end
+            [~,~,STATS] = ranksum(tmp1,tmp2);
+            Stab.zval(i,perms) = STATS.zval;
         end
     end
 end
 
-% ADHD
-for i = 1:N(2)
-    
-    feedidx = hubMat.ADHD(:,:,2,i); %index of feeders for this p
-
-    for j = 1:max(newYeoIndex)
-        for k = 1:max(newYeoIndex)
-            netidx = zeros(size(feedidx));
-
-            net1 = newYeoIndex==j;
-            net2 = newYeoIndex==k;
-            
-            netidx(net1,net2) = 1;
-            netidx(net2,net1) = 1;
-            
-            % find the common between feeders and network idx
-            new_idx = [];
-            new_idx = netidx + feedidx == 2;
-            
-            SC = ADHDSC(:,:,i);
-            SC = SC(new_idx);
-            FC = AllFC_AC(:,:,i);
-            FC = FC(new_idx);
-            
-            idx = SC(:) ~=0; %index not zero values
-            SCn = SC(idx);
-            FCn = FC(idx);
-            
-            if length(SCn) > 50
-                [r.feed.ADHD(j,k,i)] = corr(normal_transform(SCn),FCn);
-            else
-                [r.feed.ADHD(j,k,i)] = NaN;
-            end
-        end
-    end
-end
-
-% test the NANS before doing this analysis
-disp('Number of NaNs in feeder matrix across all participants:');
-disp(sum(isnan(cat(3,r.feed.CTRL,r.feed.ADHD)),3));
-
-% Do the statistical tests.
-for j = 1:max(newYeoIndex)
-    for k = 1:max(newYeoIndex)
-        x = squeeze(r.feed.CTRL(j,k,:));
-        y = squeeze(r.feed.ADHD(j,k,:));
-        [pmat(j,k),~,STATS] = ranksum(x,y);
-        zmat(j,k) = STATS.zval;
-    end
-end
-
-%% Stability test
-% Stab.perms = 100; % I would reccomend 1000
-% Stab.subs = 50;
-% for perms = 1:Stab.perms
-%     for i = 1:Stab.subs
-%         
-%         tmp1=r.hub.CTRL(:,2);
-%         tmp2=r.hub.ADHD(:,2);
-%         
-%         % delete 'i' subjects from each group
-%         idx = randperm(length(tmp1));
-%         tmp1(idx(1:i))=[];
-%         
-%         idx = randperm(length(tmp2));
-%         tmp2(idx(1:i))=[];
-%         
-%         [~,~,STATS] = ranksum(tmp1,tmp2);
-%         Stab.zval(i,perms) = STATS.zval;
-%     end
-% end
 
 %% Figure 1: Structural degree and weighted degree
-diary off
+
 if FIGS ==1
+    
     %draw raw structural matrices
     close all
-    figure('Color','w','Position',[50 850 500 145]); hold on
+    figure('Color','w','Position',[50 850 400 240]); hold on
     setCmap(cols);
     
-    subplot(1,3,1)
-    data1 = mean(CTRLSC,3);
+    subplot(2,3,1)
+    data1 = mean(AllFC_AC(:,:,N(2)+1:end),3);
     data1(logical(eye(size(data1)))) = 0;
-    i = prctile(data1(:),90);
+    i = 1.2;
     imagesc(data1,[i*-1,i])
     title('Control')
     set(gca,'FontName', 'Helvetica','FontSize', 12);
     
-    subplot(1,3,2)
-    data = mean(ADHDSC,3);
+    subplot(2,3,2)
+    data = mean(AllFC_AC(:,:,1:N(2)),3);
     data(logical(eye(size(data)))) = 0;
     %data = data(idx,idx);
     imagesc(data,[i*-1,i])
     title('ADHD')
     set(gca,'FontName', 'Helvetica','FontSize', 12);
     
-    subplot(1,3,3)
+    subplot(2,3,3)
     data = data1-data;
     data(logical(eye(size(data)))) = 0;
     %data = data(idx,idx);
     imagesc(data,[i*-1,i])
     title('Control - ADHD')
     set(gca,'FontName', 'Helvetica','FontSize', 12);
+    %colorbar
+    
+    subplot(2,3,4)
+    data1 = mean(CTRLSC,3);
+    data1(logical(eye(size(data1)))) = 0;
+    i = 10;
+    imagesc(data1,[i*-1,i])
+    %title('Control')
+    set(gca,'FontName', 'Helvetica','FontSize', 12);
+    
+    subplot(2,3,5)
+    data = mean(ADHDSC,3);
+    data(logical(eye(size(data)))) = 0;
+    %data = data(idx,idx);
+    imagesc(data,[i*-1,i])
+    %title('ADHD')
+    set(gca,'FontName', 'Helvetica','FontSize', 12);
+    
+    subplot(2,3,6)
+    data = data1-data;
+    data(logical(eye(size(data)))) = 0;
+    %data = data(idx,idx);
+    imagesc(data,[i*-1,i])
+    %title('Control - ADHD')
+    set(gca,'FontName', 'Helvetica','FontSize', 12);
+    %colorbar
     saveas(gcf,[resultsdir,'Figure1a_matrices.svg']);
     
-    
-    figure('Color','w','Position',[50 450 350 200]); hold on
     % connectome density
+    figure('Color','w','Position',[50 450 350 200]); hold on
+    
     subplot(1,2,1)
     title('')
     [~, ~, u] = ksdensity(deg.CTRL);
@@ -299,28 +307,64 @@ if FIGS ==1
     hAxes.XAxis.Exponent = 3;
     saveas(gcf,[resultsdir,'Figure1b_degree.svg']);
     %% Figure 2a: Structural connection classes
-    figure('Color','w','Position',[450 450 600 200]); hold on
+    figure('Color','w','Position',[450 450 500 150]); hold on
     data = conStren; % choose whether to vis connectivity weighted/nonweighted
     
-    classlabel = {'hub','feeder','periphery'};
+    classlabel = {'Hub','Feeder','Periphery'};
     for i = 1:3
         subplot(1,3,i)
         title('')
-        [~, ~, u] = ksdensity(data.CTRL(:,i));
-        h1 = raincloud_plot('X',data.CTRL(:,i),'color', cl(1,:),'box_on',1,'alpha',0.5,'cloud_edge_col', cl(1,:),...
-            'box_dodge',1,'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'line_width',1,...
-            'bandwidth',u);
-        h2 = raincloud_plot('X',data.ADHD(:,i),'color', cl(2,:),'box_on',1,'alpha',0.5,'cloud_edge_col', cl(2,:),...
-            'box_dodge',1,'box_dodge_amount', .75, 'dot_dodge_amount', .75, 'box_col_match', 0,'line_width',1,...
-            'bandwidth',u);
         
-        xlabel(['Mean ',classlabel{i},' strength']);
+        h1 = raincloud_plot('X',data.CTRL(:,i),'color', cl(1,:),'box_on',1,'alpha',0.5,'cloud_edge_col', cl(1,:),...
+            'box_dodge',1,'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'line_width',1);
+        h2 = raincloud_plot('X',data.ADHD(:,i),'color', cl(2,:),'box_on',1,'alpha',0.5,'cloud_edge_col', cl(2,:),...
+            'box_dodge',1,'box_dodge_amount', .75, 'dot_dodge_amount', .75, 'box_col_match', 0,'line_width',1);
+        
+        xlabel('Mean strength');
+        ylabel(classlabel{i})
+        yl = get(gca, 'YLim');
         set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
-        %set(gca,'Xtick',0:3000:12000);
+        
+        if i == 1
+            set(gca,'Xtick',0:2:10);
+            set(gca,'Xlim',[2,10]);
+        elseif i ==2
+            set(gca,'Xlim',[1,4]);
+        elseif i ==3
+            set(gca,'Xlim',[1,5]);
+            set(gca,'YLim',[yl(1),yl(2)+.1]);
+        end
     end
     saveas(gcf,[resultsdir,'Figure2a_SChubclasses.svg']);
-    saveas(gcf,[resultsdir,'Figure2a_SChubclasses.jpeg']);
-    %% Figure 2b: Group hub topology
+    
+    %% Hub topology - individual level
+    
+    figure('Color','w','Position',[50 850 300 50]); hold on
+    
+    [nets,idx] = sort(Yeo8Index,'ascend');
+    a = sum(hublist.CTRL,1)/N(1); a = a(idx);
+    b = sum(hublist.ADHD,1)/N(2); b = b(idx);
+    data = [a',b'];
+    colorbar
+    i = 1;
+    
+    figure('Color','w','Position',[50 850 300 150]); hold on
+    % actual data
+    setCmap(cols);
+    imagesc(data',[i*-1,i]);
+    netIDS = find(diff(nets));
+    netIDS(end+1) = length(nets);
+    for i = 1:length(netIDS)
+        h = line([netIDS(i) netIDS(i) ],[.25 3.5]);
+        set(h,'Color','k');
+    end
+    set(gca,'FontName', 'Helvetica','FontSize', 12,'ylim',[.25 2.5],'xlim',[0 length(nets)]);
+    set(gca,'YTick',1:2,'YTickLabel', {'Control' 'ADHD'});
+    set(gca,'XTick',netIDS,'XTickLabel', {'Vis' 'SomMat' 'DorstAttn' 'SalVentAttn' 'Limbic' 'Control' 'Default' 'Misc'});
+    xtickangle(45);
+    saveas(gcf,[resultsdir,'Figure3c_indHubs.svg']);
+    
+    %% Hub topology - group level
     % have to calculate hubs at the group level
     %CTRL
     [~,~,~,MAT,ind] = find_hubs(mean(CTRLSC,3),K);
@@ -354,7 +398,7 @@ if FIGS ==1
     
     surficeEdgeVis(MATn,COG,net,Nsize,[1,3],out)
     %% Figure 3: SC-FC correlations
-    figure('Color','w','Position',[50 50 800 200]); hold on
+    figure('Color','w','Position',[50 50 667 150]); hold on
     data = r; % choose 'logr' or 'r'
     xlims = [0 .55]; %same across plots for comparison
     
@@ -368,13 +412,13 @@ if FIGS ==1
         'box_dodge',1,'box_dodge_amount', .75, 'dot_dodge_amount', .75, 'box_col_match', 0,'line_width',1,...
         'bandwidth',u);
     
-    legend([h1{1} h2{1}], {'Control', 'ADHD'},'Location','best')
     xlabel('r value');
     ylabel('Connectome');
     set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
     
     set(gca,'Xtick',0:0.1:1);
-    set(gca,'YLim',[-15 15]); % Need to verify this code.
+    %set(gca,'YLim',[-15 15]); % Need to verify this code.
+    set(gca,'Xlim',[0.1,0.4]);
     
     classlabel = {'Hub','Feeder','Periphery'};
     for i = 1:3
@@ -382,21 +426,25 @@ if FIGS ==1
         title('')
         [~, ~, u] = ksdensity(data.hub.CTRL(:,i));
         h1 = raincloud_plot('X',data.hub.CTRL(:,i),'color', cl(1,:),'box_on',1,'alpha',0.5,'cloud_edge_col', cl(1,:),...
-            'box_dodge',1,'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'line_width',1,...
-            'bandwidth',u);
+            'box_dodge',1,'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'line_width',1);
         h2 = raincloud_plot('X',data.hub.ADHD(:,i),'color', cl(2,:),'box_on',1,'alpha',0.5,'cloud_edge_col', cl(2,:),...
-            'box_dodge',1,'box_dodge_amount', .75, 'dot_dodge_amount', .75, 'box_col_match', 0,'line_width',1,...
-            'bandwidth',u);
+            'box_dodge',1,'box_dodge_amount', .75, 'dot_dodge_amount', .75, 'box_col_match', 0,'line_width',1);
         
         xlabel('r value');
         ylabel(classlabel{i});
         set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off','view',[90 -90],'Ytick',[]);
-        set(gca,'Xtick',0:0.1:1);
+        set(gca,'Xlim',[0,0.5]);
+        yl = get(gca, 'YLim');
+        
+        if i == 3
+            
+            set(gca,'YLim',[yl(1),yl(2)+1.7]);
+        end
     end
     saveas(gcf,[resultsdir,'Figure3_SCFChubclasses.svg']);
     saveas(gcf,[resultsdir,'Figure3_SCFChubclasses.jpeg']);
     %% Figure 4: Association between SC-FC and behaviour (PCA)
-    figure('Color','w','Position',[900 25 300 250]); hold on
+    figure('Color','w','Position',[900 25 300 200]); hold on
     
     x = [r.hub.ADHD(:,2);r.hub.CTRL(:,2)];
     x(82) = []; %remember! missing data
@@ -430,45 +478,45 @@ if FIGS ==1
     ylabel('PCA component loading');
     xlabel('SC-FC correlation');
     
-    saveas(gcf,[resultsdir,'Figure4_behav.jpeg']);
-%     %% Figure 5: Stability test
-%     figure('Color','w','Position',[900 25 400 200]); hold on
-%     
-%     for i = 1:Stab.subs
-%         d = Stab.zval(i,:);
-%         CI = ConfInt(d);
-%         %CI = [min(d),max(d)];
-%         
-%         if min(CI) > 1.96
-%             line([i,i],[CI(1),CI(2)],'Color','k');
-%             scatter(i,mean(d),'k','filled');
-%         else
-%             line([i,i],[CI(1),CI(2)],'Color',[0.5 0.5 0.5]);
-%             scatter(i,mean(d),'MarkerFaceColor',[0.5 0.5 0.5],'MarkerEdgeColor',[0.5 0.5 0.5]);
-%         end
-%     end
-%     
-%     % real data point
-%     [~,~,STATS] = ranksum(r.hub.CTRL(:,1),r.hub.ADHD(:,1));
-%     scatter(0,STATS.zval,'MarkerFaceColor',cl(2,:),'MarkerEdgeColor',cl(2,:));
-%     
-%     set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
-%     xlim([0 50]);
-%     ylabel('Z-score');
-%     xlabel('Subjects deleted');
-%     saveas(gcf,[resultsdir,'Figure5_stabilityTest.jpeg']);
-%     
+    saveas(gcf,[resultsdir,'Figure4_behav.svg']);
+    %     %% Figure 5: Stability test
+    %     figure('Color','w','Position',[900 25 400 200]); hold on
+    %
+    %     for i = 1:Stab.subs
+    %         d = Stab.zval(i,:);
+    %         CI = ConfInt(d);
+    %         %CI = [min(d),max(d)];
+    %
+    %         if min(CI) > 1.96
+    %             line([i,i],[CI(1),CI(2)],'Color','k');
+    %             scatter(i,mean(d),'k','filled');
+    %         else
+    %             line([i,i],[CI(1),CI(2)],'Color',[0.5 0.5 0.5]);
+    %             scatter(i,mean(d),'MarkerFaceColor',[0.5 0.5 0.5],'MarkerEdgeColor',[0.5 0.5 0.5]);
+    %         end
+    %     end
+    %
+    %     % real data point
+    %     [~,~,STATS] = ranksum(r.hub.CTRL(:,1),r.hub.ADHD(:,1));
+    %     scatter(0,STATS.zval,'MarkerFaceColor',cl(2,:),'MarkerEdgeColor',cl(2,:));
+    %
+    %     set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
+    %     xlim([0 50]);
+    %     ylabel('Z-score');
+    %     xlabel('Subjects deleted');
+    %     saveas(gcf,[resultsdir,'Figure5_stabilityTest.jpeg']);
+    %
     %% Feeder follow up
-    figure('Color','w','Position',[50 850 300 300]); hold on
+    figure('Color','w','Position',[50 850 225 160]); hold on
     
     ncols = [255, 255, 255
-    199.5, 127.5, 127.5
-    144, 0, 0]./255;
+        199.5, 127.5, 127.5
+        144, 0, 0]./255;
     
     setCmap(ncols);
     
-    tmp = mean(r.feed.CTRL,3);
-    tmp2 = mean(r.feed.ADHD,3);
+    tmp = mean(feed.CTRL,3);
+    tmp2 = mean(feed.ADHD,3);
     data = tmp - tmp2;
     h=imagesc(data,[0.015,0.025]);
     colorbar
@@ -478,7 +526,7 @@ if FIGS ==1
     set(gca,'XTick',1:3,'XTickLabel', {'Control' 'Default-mode' 'Sensory'});
     xtickangle(45);
     set(gca,'YTick',1:3,'YTickLabel', {'Control' 'Default-mode' 'Sensory'});
-    saveas(gcf,[resultsdir,'Feederfollowup.jpeg']);
+    saveas(gcf,[resultsdir,'Feederfollowup.svg']);
     
     %% Methods figure
     figure('Color','w','Position',[50 850 120 270]); hold on

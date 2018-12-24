@@ -3,7 +3,7 @@ function [r,rnorm] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat)
 % function calculate SC-FC correlations within individual for the whole
 % connectome, then hubs/feeders/peripheries. Every non-0 SC value is added
 % to a vector and correlated with a vector of FC within the same edges. So
-% for each analysis a distribution is formed for each group which can be
+% for each analysis a distribution of r-values is formed for each group which can be
 % compared with a between-groups t-test.
 
 N(1) = size(CTRLSC,3); %sample size
