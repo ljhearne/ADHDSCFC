@@ -28,11 +28,9 @@ end
 %stats
 disp('---Degree statistics---');
 [P,~,STATS] = ranksum(deg.CTRL,deg.ADHD);
-rr = RosenthalR(STATS.zval,N(1)+N(2));
-disp(['Deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(rr)]);
+disp(['Deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
 [P,~,STATS] = ranksum(deg.CTRLw,deg.ADHDw);
-rr = RosenthalR(STATS.zval,N(1)+N(2));
-disp(['Weighted deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(rr)]);
+disp(['Weighted deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
 
 
 %% Hubs
@@ -52,6 +50,5 @@ for conn = 1:3
   %  [P,~,STATS] = ranksum(conCount.CTRL(:,conn),conCount.ADHD(:,conn));
   %  disp(['Hub COUNT    t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
     [P,~,STATS] = ranksum(conStren.CTRL(:,conn),conStren.ADHD(:,conn));
-    rr = RosenthalR(STATS.zval,N(1)+N(2));
-    disp(['Hub STRENGTH t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(rr)]);
+    disp(['Hub STRENGTH t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
 end

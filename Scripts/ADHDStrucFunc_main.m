@@ -26,7 +26,7 @@ addpath(genpath('Toolbox'));
 Atlas = 'Schaefer214';
 %Atlas = 'Shen268';
 %Atlas = 'Brainnetome_246';
-FIGS = 0; %draw figures?
+FIGS = 1; %draw figures?
 SUPP = 0; %do supplemental analyses?
 
 %---------------------------------%
@@ -71,7 +71,7 @@ diary([resultsdir,'stats.txt']);
 % Colours for plots
 [cb] = cbrewer('qual','Set3',12,'pchip');
 cl(1,:) = [0.5 0.5 0.5];
-cl(2,:) = cb(4,:);
+cl(2,:) = cb(1,:);
 
 cols = [0, 0, 144
     255, 255, 255
