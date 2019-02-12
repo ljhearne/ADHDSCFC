@@ -111,6 +111,6 @@ for that_seed = 1:length(seeds)
                    'all_std_values', ...
                    'r_ctrl_asc_afc', ...
                    'r_ctrl_esc_afc');
-    end
+end
 
 end % function run_ctrl_block_sigma()
