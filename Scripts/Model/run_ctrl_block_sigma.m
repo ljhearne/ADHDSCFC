@@ -13,6 +13,7 @@ function run_ctrl_block_sigma()
 % =============================== CONTROLS ===============================%
 % 1 - Load data for controls
 seeds = [42];  %51, 48, 91, 61, 62, 86, 81, 58, 19, 24, 89, 33, 49, 17];
+
 for that_seed = 1:length(seeds)
     % 1 - Load data for adhd -- assumes the current working directory is
     % 'ADHDSCFC/Scripts/Model/'
@@ -23,9 +24,7 @@ for that_seed = 1:length(seeds)
     load([path_to_input_files 'Schaeffer214-NodeEdgeClassification/ADHDSCConns.mat'])
     load([path_to_input_files 'Schaeffer214-NodeEdgeClassification/ADHDSCHubs.mat'])
 
-    % Select node type
-    node_types = {'all', 'hubs', 'periphery'};
-
+    
     % Structural 
     SC    = CTRLSC; 
     clear CTRLSC
@@ -52,6 +51,8 @@ for that_seed = 1:length(seeds)
     % Generate meshgrid with values of sigma_h and sigma_p
     min_sigma = 2^-3;
     max_sigma = 2;
+    
+    % SH - sigma hubs / SP -- sigma periphery
     [SH, SP] = meshgrid(min_sigma:min_sigma:max_sigma, min_sigma:min_sigma:max_sigma);
 
     % define output structures
@@ -65,14 +66,19 @@ for that_seed = 1:length(seeds)
     % seed for getting random number for sigma
     this_seed = seeds(that_seed);
 
-    % mean of the distribution of sigma_i
-    mu = 1;
+
 
     for kk=1:numel(SH)
         
-        sigma_noise    = get_sigma_noise(size(SC, 1), dist_std_value, this_seed, mu);
+        % All nodes get this value but in this function, only the hubs will get this value 
+        mu_a = SH(kk);
+        % Mean of the distribution of sigma_ for the periphery 
+        mu_b = SP(kk);
 
-        [aCTRL_FC_HUBS(:, :, :, kk), c_best, c_critic, corr_max, c_range, correl, hubs_std_values(:, kk)] = perform_pse_subjects(SC, FCPCC, sigma_noise, HBN);
+        sigma_noise    = get_sigma_noise(size(SC, 1), dist_std_value, this_seed, mu_a);
+
+
+        [aCTRL_FC_HUBS(:, :, :, kk), c_best, c_critic, corr_max, c_range, correl, hubs_std_values(:, kk)] = perform_pse_subjects(SC, FCPCC, sigma_noise, HBN, mu_b);
 
         %Calculate r_SC_FC for eSC-aFC with different levels of variability
         %Calculate r_SC_FC for aSC-aFC with different levels of variability
@@ -94,38 +100,17 @@ for that_seed = 1:length(seeds)
 
     path_to_output_files = '../../Results/Schaeffer214-Model/';
 
-    if strcmp('periphery', node_types{this_type})
-        % Swap variable names and clean up after ourselves
-        r_ctrl_asc_afc_periphery = r_ctrl_asc_afc_hubs; clear r_ctrl_asc_afc_hubs
-        r_ctrl_esc_afc_periphery = r_ctrl_esc_afc_hubs; clear r_ctrl_esc_afc_hubs
-        periphery_std_values = hubs_std_values; clear hubs_std_values
+    % Swap variable names and clean up after ourselves
+    r_ctrl_asc_afc = r_ctrl_asc_afc_hubs; clear r_ctrl_asc_afc_hubs
+    r_ctrl_esc_afc = r_ctrl_esc_afc_hubs; clear r_ctrl_esc_afc_hubs
+    all_std_values = hubs_std_values; clear hubs_std_values
 
-        % 4 - Save results
-        filename = [path_to_output_files, 'CTRL_variable_noise_periphery_nodes_seed_', num2str(this_seed)];
-        save(filename, 'dist_std_values', ...
-                       'periphery_std_values', ...
-                       'r_ctrl_asc_afc_periphery', ...
-                       'r_ctrl_esc_afc_periphery');
-                   
-    elseif strcmp('hubs', node_types{this_type})
-        % 4 - Save results
-        filename = [path_to_output_files, 'CTRL_variable_noise_hub_nodes_seed_', num2str(this_seed)];
-        save(filename, 'dist_std_values', ...
-                       'hubs_std_values', ...
-                       'r_ctrl_asc_afc_hubs', ...
-                       'r_ctrl_esc_afc_hubs');
-    else           
-        % Swap variable names and clean up after ourselves
-        r_adhd_asc_afc = r_ctrl_asc_afc_hubs; clear r_ctrl_asc_afc_hubs
-        r_adhd_esc_afc = r_ctrl_esc_afc_hubs; clear r_ctrl_esc_afc_hubs
-        all_std_values = hubs_std_values; clear hubs_std_values
-
-        % 4 - Save results
-        filename = [path_to_output_files,'CTRL_variable_noise_all_nodes_seed_', num2str(this_seed)];
-        save(filename, 'dist_std_values', ...
-                       'all_std_values', ...
-                       'r_adhd_asc_afc', ...
-                       'r_adhd_esc_afc');
+    % 4 - Save results
+    filename = [path_to_output_files,'CTRL_block_noise_seed_', num2str(this_seed)];
+    save(filename, 'SH', 'SP', ...
+                   'all_std_values', ...
+                   'r_ctrl_asc_afc', ...
+                   'r_ctrl_esc_afc');
     end
-end
-end % function run_ctrl_heterogeneous_sigma()
+
+end % function run_ctrl_block_sigma()
