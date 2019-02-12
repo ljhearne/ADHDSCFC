@@ -1,4 +1,3 @@
-
 function [sigma_noise, dist_std] = introduce_node_based_variability(sigma_noise, node_attribute, mu)
 %%  Introduces variability in the nodes indicated in the index list
 %
