@@ -49,11 +49,12 @@ for that_seed = 1:length(seeds)
     dist_std_value = 0; 
     
     % Generate meshgrid with values of sigma_h and sigma_p
-    min_sigma_step_h = 2^-5;
-    min_sigma_step_p = 2^-4;
+    min_sigma_step_h = 2^-6;
+    min_sigma_step_p = 2^-5;
     
     min_sigma_h = 0.25;
     min_sigma_p = 0.25;
+    %
     max_sigma_h = 1;
     max_sigma_p = 1;
     
