@@ -47,4 +47,4 @@ if any(sigma_noise < 0)
     sigma_noise = abs(sigma_noise);
 
 end
-end % function get_sigma_vec()
+end % function get_sigma_noise()
