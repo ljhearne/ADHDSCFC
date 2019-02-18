@@ -22,7 +22,7 @@ function [sigma_noise, dist_var] = introduce_block_heterogeneity(node_attribute,
 %}
 
 % Get the diagonal of the sigma matrix
-xx = zeros(length(node_attribute));
+xx = zeros(length(node_attribute), 1);
 
 % Node attribute is list of 0's and 1's
 % The nodes that don't have that attribute, are set to the mean value mu_b
