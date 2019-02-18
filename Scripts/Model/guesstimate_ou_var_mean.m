@@ -19,6 +19,7 @@ function [node_var, node_mean] = guesstimate_ou_var_mean(data)
     
 %}
 
+
 % Asymptotic node-wise variance 
 node_var  = var(squeeze(data(end, :, :)), [], 2);
 % Asymptotic node-wise mean
