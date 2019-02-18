@@ -49,7 +49,7 @@ for that_seed = 1:length(seeds)
     dist_std_value = 0; 
     
     % Generate meshgrid with values of sigma_h and sigma_p
-    min_sigma_step_h = 2^-6;
+    min_sigma_step_h = 2^-5;
     min_sigma_step_p = 2^-5;
     
     min_sigma_h = 0.25;
@@ -111,7 +111,7 @@ for that_seed = 1:length(seeds)
     all_std_values = hubs_std_values; clear hubs_std_values
 
     % 4 - Save results
-    filename = [path_to_output_files,'CTRL_block_noise_seed_', num2str(this_seed)];
+    filename = [path_to_output_files,'CTRL_block_noise'];
     save(filename, 'SH', 'SP', ...
                    'all_std_values', ...
                    'r_ctrl_asc_afc', ...
