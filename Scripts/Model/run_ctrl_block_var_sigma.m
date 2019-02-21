@@ -74,11 +74,6 @@ for that_seed = 1:length(seeds)
 
     for kk=1:numel(VSH)
         
-%         % ADHD Mean of the distribution of sigma_i for the hubs
-%         mu_h = 0.9;
-%         % ADHD Mean of the distribution of sigma_i for the periphery 
-%         mu_p = 1;
-
          %  CTRL Mean of the distribution of sigma_i for the hubs
          mu_h = 0.5;
          %  CTRL Mean of the distribution of sigma_i for the periphery 
@@ -117,7 +112,7 @@ for that_seed = 1:length(seeds)
     all_var_values = hubs_var_values; clear hubs_var_values
 
     % 4 - Save results
-    filename = [path_to_output_files,'CTRL_block_var_noise_17x17_evals_ctrl'];
+    filename = [path_to_output_files,'CTRL_block_var_noise_16x16_evals_ctrl'];
     save(filename, 'VSH', 'VSP', ...
                    'all_var_values', ...
                    'r_ctrl_asc_afc', ...
