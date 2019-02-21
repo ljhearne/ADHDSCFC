@@ -46,19 +46,19 @@ for that_seed = 1:length(seeds)
 
     % 3 - Calculate analytic FC 
     
-    % Generate meshgrid with values of var[sigma_h] and var[sigma_p]
-    min_var_sigma_step_h = 2^-6;
-    min_var_sigma_step_p = 2^-6;
+    % Generate meshgrid with values of std[sigma_h] and std[sigma_p]
+    min_std_sigma_step_h = 2^-5;
+    min_std_sigma_step_p = 2^-5;
     
-    min_var_sigma_h = 0.0;
-    min_var_sigma_p = 0.0;
+    min_std_sigma_h = 2^-5;
+    min_std_sigma_p = 2^-5;
     %
-    max_var_sigma_h = 0.25;
-    max_var_sigma_p = 0.25;
+    max_std_sigma_h = 0.5;
+    max_std_sigma_p = 0.5;
     
     % VSH - var sigma hubs / VSP -- var sigma periphery
-    [VSH, VSP] = meshgrid(min_var_sigma_h:min_var_sigma_step_h:max_var_sigma_h, ...
-                          min_var_sigma_p:min_var_sigma_step_p:max_var_sigma_p);
+    [VSH, VSP] = meshgrid(min_std_sigma_h:min_std_sigma_step_h:max_std_sigma_h, ...
+                          min_std_sigma_p:min_std_sigma_step_p:max_std_sigma_p);
 
     % define output structures
     r_ctrl_esc_afc_hubs = struct();
@@ -80,9 +80,9 @@ for that_seed = 1:length(seeds)
 %         mu_p = 1;
 
          %  CTRL Mean of the distribution of sigma_i for the hubs
-         mu_h = 1;
+         mu_h = 0.5;
          %  CTRL Mean of the distribution of sigma_i for the periphery 
-         mu_p = 1;
+         mu_p = 0.5;
         
         % The range is actually the standard deviation
         std_hubs = VSH(kk);
@@ -117,7 +117,7 @@ for that_seed = 1:length(seeds)
     all_var_values = hubs_var_values; clear hubs_var_values
 
     % 4 - Save results
-    filename = [path_to_output_files,'CTRL_block_var_noise'];
+    filename = [path_to_output_files,'CTRL_block_var_noise_17x17_evals_ctrl'];
     save(filename, 'VSH', 'VSP', ...
                    'all_var_values', ...
                    'r_ctrl_asc_afc', ...
