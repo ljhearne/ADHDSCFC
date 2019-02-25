@@ -1,9 +1,9 @@
-% Load the file
+% Load the file with the results from the model
 load('./Results/Schaeffer214-Model/CTRL_block_evl_noise_25x25.mat')
 
 figure_handle = figure;
 
-% 
+% Make axes for subplots
 for kk=1:4
     ax(kk) = subplot(1, 4, kk);
     hold(ax(kk), 'on')
@@ -55,40 +55,42 @@ for kk=1:4
 end
 
 
-% Plot addittional things
-
+% Plot identity line
 line_color = {'k', 'w', 'k', 'w'};
 for kk=1:4
     plot(ax(kk), esh, esp, 'color', line_color{kk}, 'linestyle', '-')
-    plot(ax(kk), esh, 1.02*esh, 'color', line_color{kk}, 'linestyle', '--') %CTRL
-    plot(ax(kk), esh, 1.1*esh, 'color', line_color{kk}, 'linestyle', ':')   % ADHD
 end
-
-
-% assume value for ctrl var(sigma_h) and var(sigma_p)
-ev_sh_c = 0.5;
-ev_sp_c = ev_sh_c*1.01;
-ev_sh_a = 0.97*ev_sh_c;
-ev_sp_a = 1.08*ev_sp_c;
-
-% assume value for ctrl var(sigma_h) and var(sigma_p)
-var_sh_c = 0.04;
-var_sp_c = var_sh_c * 0.75;
-var_sh_a = var_sh_c + var_sh_c * 0.03;
-var_sp_a = var_sp_c + var_sp_c * 0.3;
-
-[x_c, y_c] = calculate_ellipse_line(ev_sh_c, ev_sp_c, var_sh_c, var_sp_c, 0);
-[x_a, y_a] = calculate_ellipse_line(ev_sh_a, ev_sp_a, var_sh_a, var_sp_a, 0);
-
-
-plot(ax(3), ev_sh_c, ev_sp_c, 'gx', 'markersize', 14)
-plot(ax(3), ev_sh_a, ev_sp_a, 'rx', 'markersize', 14)
-plot(ax(3), x_c, y_c, 'g')
-plot(ax(3), x_a, y_a, 'r')
-
 
 
 ch_f = colorbar;
 ch_f.LineWidth = 1.5;
 ch_f.AxisLocationMode = 'manual';
 ch_f.Position = [0.9301 0.2057 0.0106 0.6971];
+
+
+
+%%  Plot the results for feeder edges only
+figure_handle_feeder = figure;
+ax_f = subplot(1,1,1);
+
+ih(5) = imagesc(ax_f, esh, esp, imgaussfilt(r(3).map, 5));
+set(ax_f, 'YDir', 'Normal')
+ax_f.XLim = [min(esh(:)) max(esh(:))];
+ax_f.YLim = [min(esp(:)) max(esp(:))];
+caxis(ax_f, [min(r(3).map(:)) max(r(3).map(:))])
+ax_f.Title.String = title_str{3};
+ax_f.XLabel.String = 'E[\sigma_H]';
+ax_f.YLabel.String = 'E[\sigma_P]';
+axis square
+hold(ax_f, 'on')
+plot(ax_f, esh, esp, 'k')
+
+
+plot(ax_f, ehc, epc, 'w.', 'markersize', 14)
+plot(ax_f, mean(ehc), mean(epc), 'kx', 'markersize', 14)
+
+plot(ax_f, eha, epa, 'r.', 'markersize', 14)
+plot(ax_f, mean(eha), mean(epa), 'kx', 'markersize', 14)
+
+rea = eha./ epa;
+rec = ehc./ epc;
