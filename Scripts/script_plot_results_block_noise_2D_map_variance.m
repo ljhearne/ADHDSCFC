@@ -1,7 +1,8 @@
 % Load one of these files and run the script
-load('./Results/Schaeffer214-Model/CTRL_block_var_noise_17x17_evals_adhd.mat')
-
 %load('./Results/Schaeffer214-Model/CTRL_block_var_noise_17x17_evals_adhd.mat')
+
+%load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_evals_ctrl.mat')
+load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_evals_adhd.mat')
 
 
 figure_handle = figure;
@@ -74,17 +75,17 @@ ax_f.YLabel.String = 'Var[\sigma_P]';
 axis square
 hold(ax_f, 'on')
 plot(ax_f, vsh, vsp, 'k')
-plot(ax_f, vsh, 0.75*vsp, 'k--')
-plot(ax_f, vsh, 0.96*vsp, 'k:')
 
-% assume value for ctrl var(sigma_h) and var(sigma_p)
-var_sh_c = 0.04;
-var_sp_c = var_sh_c * 0.75;
-var_sh_a = var_sh_c + var_sh_c * 0.03;
-var_sp_a = var_sh_a *0.97;
+%plot(ax_f, vhc, vpc, 'wx', 'markersize', 14)
+plot(ax_f, vha, vpa, 'rx', 'markersize', 14)
 
-plot(ax_f, var_sh_c, var_sp_c, 'wx', 'markersize', 14)
-plot(ax_f, var_sh_a, var_sp_a, 'rx', 'markersize', 14)
+rva = vha ./ vpa;
+rvc = vhc ./ vpc;
+
+
+%plot(ax_f, rva.*vsp, vsp, 'color', [1 0 0 0.1])
+%plot(ax_f, rvc.*vsp, vsp, 'color', [1 1 1 0.1])
+
 
 ch_f = colorbar;
 ch_f.LineWidth = 1.5;
