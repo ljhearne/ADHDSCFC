@@ -87,10 +87,10 @@ plot(ax_f, esh, esp, 'k')
 
 
 plot(ax_f, ehc, epc, 'w.', 'markersize', 14)
-plot(ax_f, mean(ehc), mean(epc), 'kx', 'markersize', 14)
+plot(ax_f, mean(ehc), mean(epc), 'wx', 'markersize', 14)
 
 plot(ax_f, eha, epa, 'r.', 'markersize', 14)
-plot(ax_f, mean(eha), mean(epa), 'kx', 'markersize', 14)
+plot(ax_f, mean(eha), mean(epa), 'rx', 'markersize', 14)
 
 rea = eha./ epa;
 rec = ehc./ epc;

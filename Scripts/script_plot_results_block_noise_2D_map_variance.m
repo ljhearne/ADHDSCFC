@@ -1,8 +1,8 @@
 % Load one of these files and run the script
 %load('./Results/Schaeffer214-Model/CTRL_block_var_noise_17x17_evals_adhd.mat')
 
-%load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_evals_ctrl.mat')
-load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_evals_adhd.mat')
+load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_evals_ctrl.mat')
+%load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_evals_adhd.mat')
 
 
 figure_handle = figure;
@@ -76,8 +76,8 @@ axis square
 hold(ax_f, 'on')
 plot(ax_f, vsh, vsp, 'k')
 
-%plot(ax_f, vhc, vpc, 'wx', 'markersize', 14)
-plot(ax_f, vha, vpa, 'rx', 'markersize', 14)
+%plot(ax_f, vhc, vpc, 'w.', 'markersize', 14)
+plot(ax_f, vha, vpa, 'r.', 'markersize', 14)
 
 rva = vha ./ vpa;
 rvc = vhc ./ vpc;
