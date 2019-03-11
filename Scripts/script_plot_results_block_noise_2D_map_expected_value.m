@@ -44,7 +44,7 @@ for kk=1:4
     set(ax(kk), 'YDir', 'Normal')
     ax(kk).XLim = [min(esh(:)) max(esh(:))];
     ax(kk).YLim = [min(esp(:)) max(esp(:))];
-    %caxis(ax(kk), [min(r(kk).map(:)) max(r(kk).map(:))])
+    caxis(ax(kk), [0.65 0.95])
     axis(ax(kk), 'square')
     ax(kk).Title.String = title_str{kk};
     ax(kk).XLabel.String = 'E[\sigma_H]';
@@ -60,14 +60,6 @@ line_color = {'k', 'w', 'k', 'w'};
 for kk=1:4
     plot(ax(kk), esh, esp, 'color', line_color{kk}, 'linestyle', '-')
 end
-
-
-ch_f = colorbar;
-ch_f.LineWidth = 1.5;
-ch_f.AxisLocationMode = 'manual';
-ch_f.Position = [0.9301 0.2057 0.0106 0.6971];
-
-
 
 %%  Plot the results for feeder edges only
 figure_handle_feeder = figure;
