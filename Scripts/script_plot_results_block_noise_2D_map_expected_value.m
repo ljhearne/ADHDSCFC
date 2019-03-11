@@ -15,7 +15,7 @@ esh = unique(SH);
 % Expected value of sigma in the periphery
 esp = unique(SP);
 
-title_str = {'all', 'h-h', 'feeder', 'p-p'};
+title_str = {'connections: all', 'connections: h-h', 'connections: feeder', 'connections: p-p'};
 
 % Get results for all type of connections
 % All connections
