@@ -10,6 +10,7 @@ figure_handle = figure;
 % 
 for kk=1:4
     ax(kk) = subplot(1, 4, kk);
+    hold(ax(kk), 'on')
 end
 
 
@@ -58,8 +59,13 @@ for kk=1:4
     ch(kk).LineWidth = 1.5;    
 end
 
+% Plot identity line
+line_color = {'k', 'w', 'k', 'w'};
+for kk=1:4
+    plot(ax(kk), vsh, vsp, 'color', line_color{kk}, 'linestyle', '-')
+end
 
-% Plot the results for feeder locations
+%% Plot the results for feeder locations
 figure_handle_feeder = figure;
 ax_f = subplot(1,1,1);
 
