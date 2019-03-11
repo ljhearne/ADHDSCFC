@@ -44,7 +44,7 @@ for kk=1:4
     set(ax(kk), 'YDir', 'Normal')
     ax(kk).XLim = [min(esh(:)) max(esh(:))];
     ax(kk).YLim = [min(esp(:)) max(esp(:))];
-    caxis(ax(kk), [min(r(kk).map(:)) max(r(kk).map(:))])
+    %caxis(ax(kk), [min(r(kk).map(:)) max(r(kk).map(:))])
     axis(ax(kk), 'square')
     ax(kk).Title.String = title_str{kk};
     ax(kk).XLabel.String = 'E[\sigma_H]';
@@ -73,24 +73,14 @@ ch_f.Position = [0.9301 0.2057 0.0106 0.6971];
 figure_handle_feeder = figure;
 ax_f = subplot(1,1,1);
 
-ih(5) = imagesc(ax_f, esh, esp, imgaussfilt(r(3).map, 5));
+ih(5) = imagesc(ax_f, esh, esp, r(3).map);
 set(ax_f, 'YDir', 'Normal')
 ax_f.XLim = [min(esh(:)) max(esh(:))];
 ax_f.YLim = [min(esp(:)) max(esp(:))];
-caxis(ax_f, [min(r(3).map(:)) max(r(3).map(:))])
+caxis(ax_f, [0.65 0.95])
 ax_f.Title.String = title_str{3};
 ax_f.XLabel.String = 'E[\sigma_H]';
 ax_f.YLabel.String = 'E[\sigma_P]';
 axis square
 hold(ax_f, 'on')
 plot(ax_f, esh, esp, 'k')
-
-
-plot(ax_f, ehc, epc, 'w.', 'markersize', 14)
-plot(ax_f, mean(ehc), mean(epc), 'wx', 'markersize', 14)
-
-plot(ax_f, eha, epa, 'r.', 'markersize', 14)
-plot(ax_f, mean(eha), mean(epa), 'rx', 'markersize', 14)
-
-rea = eha./ epa;
-rec = ehc./ epc;
