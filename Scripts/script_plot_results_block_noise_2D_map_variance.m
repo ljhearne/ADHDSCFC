@@ -1,8 +1,5 @@
-% Load one of these files and run the script
-%load('./Results/Schaeffer214-Model/CTRL_block_var_noise_17x17_evals_adhd.mat')
-
+% Load modelling results
 load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_evals_ctrl.mat')
-%load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_evals_adhd.mat')
 
 
 figure_handle = figure;
