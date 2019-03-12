@@ -77,9 +77,4 @@ ax_f.YLabel.String = 'Var[\sigma_P]';
 axis square
 hold(ax_f, 'on')
 plot(ax_f, vsh, vsp, 'k')
-
-
 ch_f = colorbar;
-ch_f.LineWidth = 1.5;
-ch_f.AxisLocationMode = 'manual';
-ch_f.Position = [0.9301 0.2057 0.0106 0.6971];
