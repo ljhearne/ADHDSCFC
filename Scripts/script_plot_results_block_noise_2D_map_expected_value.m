@@ -61,6 +61,13 @@ for kk=1:4
     plot(ax(kk), esh, esp, 'color', line_color{kk}, 'linestyle', '-')
 end
 
+%% 
+line_color = {'k', 'w', 'k', 'w'};
+for kk=1:4
+    plot(ax(kk), esh, 1.15*esh, 'color', line_color{kk}, 'linestyle', '-')
+    plot(ax(kk), esh, 0.85*esh, 'color', line_color{kk}, 'linestyle', '-')
+
+end
 %%  Plot the results for feeder edges only
 figure_handle_feeder = figure;
 ax_f = subplot(1,1,1);
@@ -76,3 +83,30 @@ ax_f.YLabel.String = 'E[\sigma_P]';
 axis square
 hold(ax_f, 'on')
 plot(ax_f, esh, esp, 'k')
+
+%% Plot the assymetry mapsplot(ax_h, esh, 1.15*esh, 'color', 'k', 'linestyle', '--')
+
+figure_handle_hub_asym = figure;
+ax_h = subplot(1,1,1);
+hold(ax_h, 'on')
+hub_map = r(4).map';
+
+% Calculate differences
+tri_low = tril(hub_map);
+tri_up = triu(hub_map)';
+res = tri_up - tri_low;
+
+im_handle = imagesc(ax_h, esh, esp, res);
+axis(ax_h, 'square')
+ax_h.XLim = [min(esh(:)) max(esh(:))];
+ax_h.YLim = [min(esp(:)) max(esp(:))];
+set(ax_h, 'YDir', 'Normal')
+cmap = bluered(65);
+cmap(34:end, :) = [];
+colormap(cmap)
+
+plot(ax_h, esh, esp, 'color', 'k', 'linestyle', '-')
+plot(ax_h, esh, 1.2*esh, 'color', 'k', 'linestyle', '--')
+
+
+
