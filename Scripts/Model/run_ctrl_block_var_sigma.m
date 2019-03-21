@@ -13,7 +13,7 @@ function run_ctrl_block_var_sigma()
 %               Coefficients
 % =============================== CONTROLS ===============================%
 % 1 - Load data for controls
-seeds = [42];  %51, 48, 91, 61, 62, 86, 81, 58, 19, 24, 89, 33, 49, 17];
+seeds = [42, 51, 48, 91, 61, 62, 86, 81, 58, 19, 24, 89, 33, 49, 17];
 
 for that_seed = 1:length(seeds)
     % 1 - Load data for adhd -- assumes the current working directory is
@@ -75,7 +75,7 @@ for that_seed = 1:length(seeds)
     for kk=1:numel(VSH)
         
          %  CTRL Mean of the distribution of sigma_i for the hubs
-         mu_h = 0.4;
+         mu_h = 0.5;
          %  CTRL Mean of the distribution of sigma_i for the periphery 
          mu_p = 0.5;
         
@@ -112,7 +112,7 @@ for that_seed = 1:length(seeds)
     all_var_values = hubs_var_values; clear hubs_var_values
 
     % 4 - Save results
-    filename = [path_to_output_files,'CTRL_block_var_noise_16x16_hub_periphery_20_percent'];
+    filename = [path_to_output_files,'CTRL_block_var_noise_16x16_hub_periphery_00_percent'];
     save(filename, 'VSH', 'VSP', ...
                    'all_var_values', ...
                    'r_ctrl_asc_afc', ...
