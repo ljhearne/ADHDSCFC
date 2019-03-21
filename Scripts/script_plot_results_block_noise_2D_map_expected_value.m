@@ -15,7 +15,12 @@ esh = unique(SH);
 % Expected value of sigma in the periphery
 esp = unique(SP);
 
-title_str = {'connections: all', 'connections: h-h', 'connections: feeder', 'connections: p-p'};
+title_str = {'connections: all', 'hubs', 'feeders', 'local'};
+midline_values  = {0.8914, 0.892, 0.8787, 0.9163}; 
+
+rscfc_ctrl = [0.2708, 0.2394, 0.2318, 0.2933];
+rscfc_adhd = [0.2571, 0.2350, 0.2100, 0.2838];
+rscfc_percentage = ((rscfc_ctrl./  rscfc_adhd)-1);
 
 % Get results for all type of connections
 % All connections
@@ -40,7 +45,7 @@ max_r_val = max(max_r_val);
 
 
 for kk=1:4
-    ih(kk) = imagesc(ax(kk), esh, esp, r(kk).map);
+    ih(kk) = imagesc(ax(kk), esh, esp, r(kk).map);   
     set(ax(kk), 'YDir', 'Normal')
     ax(kk).XLim = [min(esh(:)) max(esh(:))];
     ax(kk).YLim = [min(esp(:)) max(esp(:))];
@@ -56,16 +61,14 @@ end
 
 
 % Plot identity line
-line_color = {'k', 'w', 'k', 'w'};
+line_color = {'k', 'k', 'k', 'k'};
 for kk=1:4
     plot(ax(kk), esh, esp, 'color', line_color{kk}, 'linestyle', '-')
 end
-
-%% 
-line_color = {'k', 'w', 'k', 'w'};
+% Lines at 25% assymetry between hub and periphery
 for kk=1:4
-    plot(ax(kk), esh, 1.15*esh, 'color', line_color{kk}, 'linestyle', '-')
-    plot(ax(kk), esh, 0.85*esh, 'color', line_color{kk}, 'linestyle', '-')
+    plot(ax(kk), esh, 1.25*esh, 'color', line_color{kk}, 'linestyle', '-')
+    plot(ax(kk), esh, 0.75*esh, 'color', line_color{kk}, 'linestyle', '-')
 
 end
 %%  Plot the results for feeder edges only
@@ -83,30 +86,3 @@ ax_f.YLabel.String = 'E[\sigma_P]';
 axis square
 hold(ax_f, 'on')
 plot(ax_f, esh, esp, 'k')
-
-%% Plot the assymetry mapsplot(ax_h, esh, 1.15*esh, 'color', 'k', 'linestyle', '--')
-
-figure_handle_hub_asym = figure;
-ax_h = subplot(1,1,1);
-hold(ax_h, 'on')
-hub_map = r(4).map';
-
-% Calculate differences
-tri_low = tril(hub_map);
-tri_up = triu(hub_map)';
-res = tri_up - tri_low;
-
-im_handle = imagesc(ax_h, esh, esp, res);
-axis(ax_h, 'square')
-ax_h.XLim = [min(esh(:)) max(esh(:))];
-ax_h.YLim = [min(esp(:)) max(esp(:))];
-set(ax_h, 'YDir', 'Normal')
-cmap = bluered(65);
-cmap(34:end, :) = [];
-colormap(cmap)
-
-plot(ax_h, esh, esp, 'color', 'k', 'linestyle', '-')
-plot(ax_h, esh, 1.2*esh, 'color', 'k', 'linestyle', '--')
-
-
-
