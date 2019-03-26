@@ -123,16 +123,16 @@ for that_seed = 1:length(seeds)
                        'r_ctrl_esc_afc_hubs');
     else           
         % Swap variable names and clean up after ourselves
-        r_adhd_asc_afc = r_ctrl_asc_afc_hubs; clear r_ctrl_asc_afc_hubs
-        r_adhd_esc_afc = r_ctrl_esc_afc_hubs; clear r_ctrl_esc_afc_hubs
+        r_ctrl_asc_afc = r_ctrl_asc_afc_hubs; clear r_ctrl_asc_afc_hubs
+        r_ctrl_esc_afc = r_ctrl_esc_afc_hubs; clear r_ctrl_esc_afc_hubs
         all_std_values = hubs_std_values; clear hubs_std_values
 
         % 4 - Save results
         filename = [path_to_output_files,'CTRL_variable_noise_all_nodes_seed_', num2str(this_seed)];
         save(filename, 'dist_std_values', ...
                        'all_std_values', ...
-                       'r_adhd_asc_afc', ...
-                       'r_adhd_esc_afc');
+                       'r_ctrl_asc_afc', ...
+                       'r_ctrl_esc_afc');
     end
 end
 end % function run_ctrl_heterogeneous_sigma()
