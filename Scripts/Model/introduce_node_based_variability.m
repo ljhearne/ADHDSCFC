@@ -29,7 +29,7 @@ end
 % Get the diagonal of the sigma matrix
 xx = diag(sigma_noise);
 % Node attribute is list of 0's and 1's
-% The nodes that don't have that attribute, are set to the mean value
+% The nodes that don't have that attribute, are set to the mean value mu
 xx(node_attribute == 0) = mu;
 
 % Recalculate the standard deviation of the sigm
