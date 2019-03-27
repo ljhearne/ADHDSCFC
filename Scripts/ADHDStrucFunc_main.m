@@ -77,11 +77,15 @@ cols = [0, 0, 144
     255, 255, 255
     144, 0, 0]./255;
 
+cols = [cl(2,:)
+    1,1,1
+    cl(1,:)];
+
 %% Structural analysis
 [deg,conCount,conStren,hubMat,hublist] = Struc_analysis(ADHDSC,CTRLSC,K);
 
 %% Structure - function analysis
-% by connection class - hub, feeder & periphery.
+% by connection class - hub, feeder & local.
 [~,r] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat);
 
 %% Behaviour
@@ -306,11 +310,12 @@ if FIGS ==1
     hAxes = gca;
     hAxes.XAxis.Exponent = 3;
     saveas(gcf,[resultsdir,'Figure1b_degree.svg']);
+    
     %% Figure 2a: Structural connection classes
     figure('Color','w','Position',[450 450 500 150]); hold on
     data = conStren; % choose whether to vis connectivity weighted/nonweighted
     
-    classlabel = {'Hub','Feeder','Periphery'};
+    classlabel = {'Hub','Feeder','local'};
     for i = 1:3
         subplot(1,3,i)
         title('')
@@ -418,9 +423,9 @@ if FIGS ==1
     
     set(gca,'Xtick',0:0.1:1);
     %set(gca,'YLim',[-15 15]); % Need to verify this code.
-    set(gca,'Xlim',[0.1,0.4]);
+    set(gca,'Xlim',[0,0.5]);
     
-    classlabel = {'Hub','Feeder','Periphery'};
+    classlabel = {'Hub','Feeder','local'};
     for i = 1:3
         subplot(1,4,1+i)
         title('')
@@ -437,31 +442,32 @@ if FIGS ==1
         yl = get(gca, 'YLim');
         
         if i == 3
-            
             set(gca,'YLim',[yl(1),yl(2)+1.7]);
         end
     end
     saveas(gcf,[resultsdir,'Figure3_SCFChubclasses.svg']);
     saveas(gcf,[resultsdir,'Figure3_SCFChubclasses.jpeg']);
     %% Figure 4: Association between SC-FC and behaviour (PCA)
-    figure('Color','w','Position',[900 25 300 200]); hold on
+    figure('Color','w','Position',[900 25 200 150]); hold on
     
     x = [r.hub.ADHD(:,2);r.hub.CTRL(:,2)];
     x(82) = []; %remember! missing data
     y = behav.PCA.score(:,1);
-    
+    size_data = 20;
     %ADHD only
     scatter(x(1:78),y(1:78),...
         'MarkerEdgeColor',cl(2,:),...
         'MarkerFaceColor',cl(2,:),...
-        'MarkerEdgeAlpha', 0.5,...
-        'MarkerFaceAlpha', 0.5,...
+        'MarkerEdgeAlpha', 0.7,...
+        'MarkerFaceAlpha', 0.7,...
+        'SizeData',size_data,...
         'LineWidth',1); hold on;
     scatter(x(79:end),y(79:end),...
         'MarkerEdgeColor',cl(1,:),...
         'MarkerFaceColor',cl(1,:),...
         'MarkerEdgeAlpha', 0.5,...
         'MarkerFaceAlpha', 0.5,...
+        'SizeData',size_data,...
         'LineWidth',1); hold on;
     
     ax = scatter(x,y,...
@@ -509,23 +515,23 @@ if FIGS ==1
     %% Feeder follow up
     figure('Color','w','Position',[50 850 225 160]); hold on
     
-    ncols = [255, 255, 255
-        199.5, 127.5, 127.5
-        144, 0, 0]./255;
+   % ncols = [1, 1, 1
+   %     .85, .93, .98
+   %     cl(2,1), cl(2,2), cl(2,3)];
     
-    setCmap(ncols);
+    %setCmap(ncols);
     
     tmp = mean(feed.CTRL,3);
     tmp2 = mean(feed.ADHD,3);
     data = tmp - tmp2;
-    h=imagesc(data,[0.015,0.025]);
+    imagesc(flipud(data),[0,0.026]);
     colorbar
     
     %title('Control > ADHD')
     %set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
     set(gca,'XTick',1:3,'XTickLabel', {'Control' 'Default-mode' 'Sensory'});
     xtickangle(45);
-    set(gca,'YTick',1:3,'YTickLabel', {'Control' 'Default-mode' 'Sensory'});
+    set(gca,'YTick',1:3,'YTickLabel', {'Sensory' 'Default-mode' 'Control'});
     saveas(gcf,[resultsdir,'Feederfollowup.svg']);
     
     %% Methods figure
