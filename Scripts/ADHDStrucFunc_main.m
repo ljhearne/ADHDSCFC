@@ -3,7 +3,8 @@ close all
 clc
 
 % This the main script for the ADHD structure-function paper. It is linked
-% to the github repo: https://github.com/ljhearne/ADHDSCFC
+% to the github repo: https://github.com/ljhearne/ADHDSCFC. For information
+% about specific analyses see the functions.
 
 % Please note:
 % - This script assumes the data is organized in a very specific way which
@@ -23,10 +24,11 @@ K = 0.15;
 addpath(genpath('Functions'));
 addpath(genpath('Toolbox'));
 
+% Parcellation
 Atlas = 'Schaefer214';
 %Atlas = 'Shen268';
 %Atlas = 'Brainnetome_246';
-FIGS = 1; %draw figures?
+FIGS = 0; %draw figures?
 SUPP = 0; %do supplemental analyses?
 
 %---------------------------------%
@@ -41,7 +43,8 @@ load([DataPath,Atlas,'/','FC/AllFC_ADHD_CTRL.mat']);
 N(1) = size(CTRLSC,3); %sample size
 N(2) = size(ADHDSC,3);
 
-% Brainetome ROIs 117,118 should be deleted
+% Brainetome ROIs 117,118 should be deleted due to poor fMRI data in those
+% regions
 if strcmp(Atlas,'Brainnetome_246')
     tmp = [117,118];
     COG(tmp,:) =      [];

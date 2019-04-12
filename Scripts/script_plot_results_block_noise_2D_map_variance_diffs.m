@@ -1,19 +1,27 @@
 % Load 2D maps Var[\sigma_P] vs Var[\sigma_H]
+clearvars
+close all
 
-load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_hub_periphery_00_percent.mat')
+addpath('Functions/');
+
+%path = './';
+path = '/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/';
+
+load([path,'Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_hub_periphery_00_percent.mat'])
 map = reshape(median(r_ctrl_esc_afc.feed_edges), size(VSH));
 feeder_map(1).map = map';
-load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_hub_periphery_10_percent.mat')
+load([path,'Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_hub_periphery_10_percent.mat'])
 map = reshape(median(r_ctrl_esc_afc.feed_edges), size(VSH));
 feeder_map(2).map = map';
-load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_hub_periphery_20_percent.mat')
+load([path,'Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_hub_periphery_20_percent.mat'])
 map = reshape(median(r_ctrl_esc_afc.feed_edges), size(VSH));
 feeder_map(3).map = map';
-load('./Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_hub_periphery_50_percent.mat')
+load([path,'Results/Schaeffer214-Model/CTRL_block_var_noise_16x16_hub_periphery_50_percent.mat'])
 map = reshape(median(r_ctrl_esc_afc.feed_edges), size(VSH));
 feeder_map(4).map = map';
 
-figure_handle = figure;
+figure_handle = figure('Color','w','Position',[50 850 800 500]);
+
 % 
 for kk=1:8
     ax(kk) = subplot(2, 4, kk);
@@ -52,6 +60,8 @@ for kk=1:4
     ch(kk).Location = 'SouthOutside';
     ch(kk).LineWidth = 1.5;
     ax(kk).Colormap = cmap_corr;
+    ax(kk).FontSize=12;
+    ax(kk).FontName='Helvetica';
 end
 
 % Plot identity line
@@ -79,6 +89,5 @@ for kk=6:8
     ax(kk).Colormap = cmap_diff;
     plot(ax(kk), vsh, vsp, 'color', line_color{kk-4}, 'linestyle', '-')
 end
-
 
 

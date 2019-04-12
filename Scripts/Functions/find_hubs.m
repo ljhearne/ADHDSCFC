@@ -1,8 +1,13 @@
 function [ConCount,ConStren,ConStrenNorm,MAT_out,hublist] = find_hubs(data,K)
 
-%This code idenitifies hubs and then the different connection classes, you
-%input a node x node matrix and the K (number of nodes) level. It uses 4
-%different graph metrics to define hubs (see below).
+%This code idenitifies hubs and then the different connection classes. It
+%uses 4 different graph metrics to define hubs (see below). Credit goes to
+%the brain connectivity toolbox, Andrew Zalesky and coathor HY. (I just
+%organised the code)
+
+% INPUTS:
+% - data: node x node connectivity matrix
+% - K: The hub definition (e.g., 0.15)
 
 Nodes = size(data,1); %num of nodes in parc.
 Nconn = (Nodes*(Nodes-1))/2;

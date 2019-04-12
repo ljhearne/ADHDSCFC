@@ -6,6 +6,14 @@ function [r,rnorm] = StrucFunc_analysis(ADHDSC,CTRLSC,AllFC_AC,hubMat)
 % for each analysis a distribution of r-values is formed for each group which can be
 % compared with a between-groups t-test.
 
+% INPUTS:
+% - ADHDSC: node x node x participant ADHD 3d structural matrices
+% - CTRLSC: node x node x participant ADHD 3d structural matrices
+% - AllFC_AC: All subjects FC matrices. This was entered as one matrix due
+% to how the data was organised and no other reason
+% - hubMat: a node x node x connection class x individual 4d binary matrix
+% (see find_hubs.m)
+
 N(1) = size(CTRLSC,3); %sample size
 N(2) = size(ADHDSC,3);
 

@@ -5,6 +5,16 @@ function feed = Func_followup(CTRLSC,ADHDSC,AllFC_AC,net,hubMat)
 % does this correlation if there are at least 50 data points, if not,
 % returns a NAN value.
 
+% INPUTS:
+% - ADHDSC: node x node x participant ADHD 3d structural matrices
+% - CTRLSC: node x node x participant ADHD 3d structural matrices
+% - AllFC_AC: All subjects FC matrices. This was entered as one matrix due
+% to how the data was organised and no other reason
+% - net: the parcellation's default network assignment.
+% - hubMat: a node x node x connection class x individual 4d binary matrix
+% (see find_hubs.m)
+
+
 % To ensure we have enough edges in our networks we add together all the
 % control networks.
 new_net = zeros(size(net));

@@ -1,7 +1,13 @@
 % Load the file with the results from the model
-load('./Results/Schaeffer214-Model/CTRL_block_evl_noise_25x25.mat')
 
-figure_handle = figure;
+clearvars
+close all
+
+%path = './';
+path = '/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/';
+load([path,'Results/Schaeffer214-Model/CTRL_block_evl_noise_25x25.mat'])
+
+figure_handle = figure('Color','w','Position',[50 850 640 400]);
 
 % Make axes for subplots
 for kk=1:4
@@ -49,6 +55,9 @@ for kk=1:4
     set(ax(kk), 'YDir', 'Normal')
     ax(kk).XLim = [min(esh(:)) max(esh(:))];
     ax(kk).YLim = [min(esp(:)) max(esp(:))];
+    ax(kk).XTick = [0.4,0.6,0.8,1];
+    ax(kk).YTick = [0.4,0.6,0.8,1];
+    ax(kk).TickLength = [0.01,0.025];
     caxis(ax(kk), [0.65 0.95])
     axis(ax(kk), 'square')
     ax(kk).Title.String = title_str{kk};
@@ -67,22 +76,23 @@ for kk=1:4
 end
 % Lines at 25% assymetry between hub and periphery
 for kk=1:4
-    plot(ax(kk), esh, 1.25*esh, 'color', line_color{kk}, 'linestyle', '-')
-    plot(ax(kk), esh, 0.75*esh, 'color', line_color{kk}, 'linestyle', '-')
+    %plot(ax(kk), esh, 1.25*esh, 'color', line_color{kk}, 'linestyle', '-')
+    %plot(ax(kk), esh, 0.75*esh, 'color', line_color{kk}, 'linestyle', '-')
 
 end
+saveas(gcf,'/Users/luke/Documents/Projects/ADHDStrucFunc/Docs/Results/K15/Schaefer214/Model_ScenarioI.svg');
 %%  Plot the results for feeder edges only
-figure_handle_feeder = figure;
-ax_f = subplot(1,1,1);
-
-ih(5) = imagesc(ax_f, esh, esp, r(3).map);
-set(ax_f, 'YDir', 'Normal')
-ax_f.XLim = [min(esh(:)) max(esh(:))];
-ax_f.YLim = [min(esp(:)) max(esp(:))];
-caxis(ax_f, [0.65 0.95])
-ax_f.Title.String = title_str{3};
-ax_f.XLabel.String = 'E[\sigma_H]';
-ax_f.YLabel.String = 'E[\sigma_P]';
-axis square
-hold(ax_f, 'on')
-plot(ax_f, esh, esp, 'k')
+% figure_handle_feeder = figure;
+% ax_f = subplot(1,1,1);
+% 
+% ih(5) = imagesc(ax_f, esh, esp, r(3).map);
+% set(ax_f, 'YDir', 'Normal')
+% ax_f.XLim = [min(esh(:)) max(esh(:))];
+% ax_f.YLim = [min(esp(:)) max(esp(:))];
+% caxis(ax_f, [0.65 0.95])
+% ax_f.Title.String = title_str{3};
+% ax_f.XLabel.String = 'E[\sigma_H]';
+% ax_f.YLabel.String = 'E[\sigma_P]';
+% axis square
+% hold(ax_f, 'on')
+% plot(ax_f, esh, esp, 'k')

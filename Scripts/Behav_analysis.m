@@ -1,7 +1,14 @@
 function behav = Behav_analysis(r,behav)
-% HY's analysis (includes all subjects rather than just ADHD).
+% this function performs some normality checks on the data, transforms the
+% data, then performs a PCA and correlates the results with SC-FC coupling.
+% credit: coauthor HY
 
-% All_Symp(:,1)~Inattention SNAP-IV (parent-rated);
+% INPUTS:
+% - r: structure of results of the sc-fc analysis
+% - behav: structure of the four behavioural measures
+
+% description of behavioural measures:
+%All_Symp(:,1)~Inattention SNAP-IV (parent-rated);
 %All_Symp(:,2)~Hyperactivity/Impulsivity SNAP-IV (parent-rated);
 %All_Symp(:,3)~Inattention ASRS (self-rated);
 %All_Symp(:,4)~Hyperactivity/Impulsivity ASRS (self-rated);
