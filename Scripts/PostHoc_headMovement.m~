@@ -1,0 +1,93 @@
+% Hsiang-Yuan Lin
+% Attachments
+% Sun, Jun 30, 3:37 AM (1 day ago)
+% to me, Luca
+% 
+% Dear Luke,
+% 
+% In the .mat, 
+% ADHD_M(:,5)=mean FD
+% ADHD_M(:,6)=DSI signal dropout counts (motion estimates)
+% ADHD_M(:,7)=group assignment, 1=CTRL, 2=ADHD
+% 
+% score(:,1)= factor scores of PCA component 1 based on ADHD_M(:,[1:4])
+% 
+% Cheers, Hsiang-Yuan
+
+clearvars
+close all
+
+load('ADHD_PCA_Corr.mat','ADHD_M','score')
+
+fd = ADHD_M(:,5);
+dsi_motion = ADHD_M(:,6);
+group = ADHD_M(:,7);
+symptoms = score(:,1);
+
+%% print stats to screen
+
+%% plots
+addpath(genpath('Functions'));
+[cb] = cbrewer('qual','Set3',12,'pchip');
+cl(1,:) = [0.5 0.5 0.5];
+cl(2,:) = cb(1,:);
+
+figure('Color','w','Position',[1200 425 400 150]); hold on
+subplot(1,2,1)
+for i = 1:2
+    scatter(fd(group==i),symptoms(group==i),...
+        'MarkerEdgeColor',cl(i,:),...
+        'MarkerFaceColor',cl(i,:),...
+        'MarkerEdgeAlpha', 0.7,...
+        'MarkerFaceAlpha', 0.7,...
+        'SizeData',20,...
+        'LineWidth',1); hold on;
+    
+    h = lsline;     
+    set(h(1),'LineWidth',2,'Color',cl(i,:)*0.6);
+    hold on
+end
+
+set(gca,'FontName', 'Helvetica','FontSize', 10,'box','off');
+ylabel('ADHD Symptoms ');
+xlabel('Framewise displacement');
+
+
+
+
+%     %% Figure 4: Association between SC-FC and behaviour (PCA)
+%     figure('Color','w','Position',[900 25 200 150]); hold on
+%     
+%     x = [r.hub.ADHD(:,2);r.hub.CTRL(:,2)];
+%     x(82) = []; %remember! missing data
+%     y = behav.PCA.score(:,1);
+%     size_data = 20;
+%     %ADHD only
+%     scatter(x(1:78),y(1:78),...
+%         'MarkerEdgeColor',cl(2,:),...
+%         'MarkerFaceColor',cl(2,:),...
+%         'MarkerEdgeAlpha', 0.7,...
+%         'MarkerFaceAlpha', 0.7,...
+%         'SizeData',size_data,...
+%         'LineWidth',1); hold on;
+%     scatter(x(79:end),y(79:end),...
+%         'MarkerEdgeColor',cl(1,:),...
+%         'MarkerFaceColor',cl(1,:),...
+%         'MarkerEdgeAlpha', 0.5,...
+%         'MarkerFaceAlpha', 0.5,...
+%         'SizeData',size_data,...
+%         'LineWidth',1); hold on;
+%     
+%     ax = scatter(x,y,...
+%         'MarkerEdgeColor','k',...
+%         'MarkerEdgeAlpha', 0,...
+%         'LineWidth',1); hold on;
+%     
+%     h = lsline;
+%     
+%     delete(h(2)); delete(h(3));
+%     set(h(1),'LineWidth',.1, 'Color','k');
+%     
+%     set(gca,'FontName', 'Helvetica','FontSize', 12,'box','off');
+%     ylabel('PCA component loading');
+%     xlabel('SC-FC correlation');
