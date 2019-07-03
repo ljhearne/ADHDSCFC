@@ -32,9 +32,11 @@ end
 %stats
 disp('---Degree statistics---');
 [P,~,STATS] = ranksum(deg.CTRL,deg.ADHD);
-disp(['Deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+STATS.r = STATS.zval / sqrt(sum(N));
+disp(['Deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(STATS.r)]);
 [P,~,STATS] = ranksum(deg.CTRLw,deg.ADHDw);
-disp(['Weighted deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+STATS.r = STATS.zval / sqrt(sum(N));
+disp(['Weighted deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(STATS.r)]);
 
 
 %% Hubs
@@ -54,5 +56,6 @@ for conn = 1:3
   %  [P,~,STATS] = ranksum(conCount.CTRL(:,conn),conCount.ADHD(:,conn));
   %  disp(['Hub COUNT    t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
     [P,~,STATS] = ranksum(conStren.CTRL(:,conn),conStren.ADHD(:,conn));
-    disp(['Hub STRENGTH t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval)]);
+    STATS.r = STATS.zval / sqrt(sum(N));
+    disp(['Hub STRENGTH t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(STATS.r)]);
 end
