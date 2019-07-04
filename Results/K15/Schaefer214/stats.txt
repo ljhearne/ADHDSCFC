@@ -1,0 +1,12 @@
+---Degree statistics---
+Deg t-test, pval = 0.23513 z = -1.1872 r = -0.084803
+Weighted deg t-test, pval = 0.8946 z = 0.13249 r = 0.0094634
+---Connection class statistics---
+Hub STRENGTH t-test- k = 0.15, conn = 1 pval = 0.86416 z = -0.17108 r = -0.01222
+Hub STRENGTH t-test- k = 0.15, conn = 2 pval = 0.61863 z = 0.49779 r = 0.035557
+Hub STRENGTH t-test- k = 0.15, conn = 3 pval = 0.22811 z = 1.2053 r = 0.08609
+---STRUC-FUNC statistics---
+Connectome-wide t-test (NORMAL), pval = 0.011913 z = 2.5147 r = 0.17962
+Hub NORMAL t-test, pval = 0.58284, pbonf(3) = 1.7485, z = 0.54925 r = 0.039232
+Feeder NORMAL t-test, pval = 0.0019608, pbonf(3) = 0.0058825, z = 3.0961 r = 0.22115
+Periphery NORMAL t-test, pval = 0.10985, pbonf(3) = 0.32956, z = 1.5989 r = 0.1142
