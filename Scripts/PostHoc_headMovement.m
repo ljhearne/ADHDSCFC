@@ -35,6 +35,14 @@ for i = 1:2
     
 end
 
+% overall correlation
+[r,p] = corr(fd,symptoms);
+disp(['OVERALL**Measure: framewise displacement, r=',num2str(r),', p=',num2str(p)])
+
+[r,p] = corr(dsi_motion,symptoms);
+disp(['OVERALL**Measure: dsi motion,r=',num2str(r),', p=',num2str(p)])
+
+
 %% plots
 addpath(genpath('Functions'));
 [cb] = cbrewer('qual','Set3',12,'pchip');

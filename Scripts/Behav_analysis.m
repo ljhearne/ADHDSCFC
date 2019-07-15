@@ -23,7 +23,7 @@ idx = [1:81,83:196]; % exclude missing data
 for i = 1:4
     h=lillietest(behav.All_Symp(idx,i));
     if h == 1
-        disp(['Distribution of values in behavioural variable ',num2str(i), ' is non-normal']);
+        disp([9,'Distribution of values in behavioural variable ',num2str(i), ' is non-normal']);
     end
 end
 
@@ -36,7 +36,7 @@ behav.All_Symp_log(behav.All_Symp_log==-Inf)=0; % Inf values = 0
 for i = 1:4
     h=lillietest(behav.All_Symp_log(:,i));
     if h == 1
-        disp(['Log transformed values in var ',num2str(i), ' are still non-normal...']);
+        disp([9,'Log transformed values in var ',num2str(i), ' are still non-normal...']);
     end
 end
 
@@ -49,7 +49,7 @@ end
 for i = 1:4
     h=lillietest(behav.All_Symp_norm(:,i));
     if h == 1
-        disp(['Normal transformed values in var ',num2str(i), ' are still non-normal...']);
+        disp([9,'Normal transformed values in var ',num2str(i), ' are still non-normal...']);
     end
 end
 

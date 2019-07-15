@@ -29,7 +29,7 @@ Atlas = 'Schaefer214';
 %Atlas = 'Shen268';
 %Atlas = 'Brainnetome_246';
 FIGS = 0; %draw figures?
-SUPP = 0; %do supplemental analyses?
+SUPP = 1; %do supplemental analyses?
 
 %---------------------------------%
 %---------------------------------%
@@ -193,28 +193,6 @@ if SUPP ==1
     
     Stable = array2table(Stable,'VariableNames',l,'RowNames',r);
     writetable(Stable,[resultsdir,'SuppTable5.xlsx'],'WriteRowNames',1);
-    
-    % Supplementary stability test
-    Stab.perms = 100; % I would reccomend 1000
-    Stab.subs = 50;
-    
-    for perms = 1:Stab.perms
-        for i = 1:Stab.subs
-            
-            tmp1=r.hub.CTRL(:,2);
-            tmp2=r.hub.ADHD(:,2);
-            
-            % delete 'i' subjects from each group
-            idx = randperm(length(tmp1));
-            tmp1(idx(1:i))=[];
-            
-            idx = randperm(length(tmp2));
-            tmp2(idx(1:i))=[];
-            
-            [~,~,STATS] = ranksum(tmp1,tmp2);
-            Stab.zval(i,perms) = STATS.zval;
-        end
-    end
 end
 
 

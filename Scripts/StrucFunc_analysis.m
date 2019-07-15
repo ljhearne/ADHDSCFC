@@ -58,8 +58,9 @@ disp('---STRUC-FUNC statistics---');
 [P,~,STATS] = ranksum(rnorm.all.CTRL,rnorm.all.ADHD);
 STATS.r = STATS.zval / sqrt(sum(N));
 disp(['Connectome-wide t-test (NORMAL), pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(STATS.r)]);
-% same analysis but divided by connection class.
+normality_tests(rnorm.all.CTRL,rnorm.all.ADHD);
 
+% same analysis but divided by connection class.
 for connType = 1:3
     for i = 1:N(1)
         SC = CTRLSC(:,:,i);
@@ -111,5 +112,6 @@ for connType = 1:3
     [P,~,STATS] = ranksum(rnorm.hub.CTRL(:,connType),rnorm.hub.ADHD(:,connType));
     STATS.r = STATS.zval / sqrt(sum(N));
     disp([classlabel{connType},' NORMAL t-test, pval = ',num2str(P),', pbonf(3) = ',num2str(P*3),', z = ',num2str(STATS.zval),' r = ',num2str(STATS.r)]);
+    normality_tests(rnorm.hub.CTRL(:,connType),rnorm.hub.ADHD(:,connType));
 end
 end

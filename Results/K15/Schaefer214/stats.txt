@@ -1,12 +1,58 @@
 ---Degree statistics---
 Deg t-test, pval = 0.23513 z = -1.1872 r = -0.084803
+	ks-test, g1,p=4.27e-105
+	ks-test, g2,p=4.6471e-70
+		Bartletts for equal variances,p=0.0073571
 Weighted deg t-test, pval = 0.8946 z = 0.13249 r = 0.0094634
+	ks-test, g1,p=4.27e-105
+	ks-test, g2,p=4.6471e-70
+		Bartletts for equal variances,p=0.036669
 ---Connection class statistics---
 Hub STRENGTH t-test- k = 0.15, conn = 1 pval = 0.86416 z = -0.17108 r = -0.01222
+	ks-test, g1,p=4.0471e-104
+	ks-test, g2,p=1.3568e-69
+		Bartletts for equal variances,p=0.13979
 Hub STRENGTH t-test- k = 0.15, conn = 2 pval = 0.61863 z = 0.49779 r = 0.035557
+	ks-test, g1,p=1.6044e-95
+	ks-test, g2,p=1.537e-58
+		Bartletts for equal variances,p=0.54951
 Hub STRENGTH t-test- k = 0.15, conn = 3 pval = 0.22811 z = 1.2053 r = 0.08609
+	ks-test, g1,p=1.8821e-98
+	ks-test, g2,p=4.1919e-60
+		Bartletts for equal variances,p=0.6069
 ---STRUC-FUNC statistics---
 Connectome-wide t-test (NORMAL), pval = 0.011913 z = 2.5147 r = 0.17962
+	ks-test, g1,p=1.4041e-34
+	ks-test, g2,p=3.763e-22
+		Bartletts for equal variances,p=0.76838
 Hub NORMAL t-test, pval = 0.58284, pbonf(3) = 1.7485, z = 0.54925 r = 0.039232
+	ks-test, g1,p=1.8828e-27
+	ks-test, g2,p=2.6121e-19
+		Bartletts for equal variances,p=0.9145
 Feeder NORMAL t-test, pval = 0.0019608, pbonf(3) = 0.0058825, z = 3.0961 r = 0.22115
+	ks-test, g1,p=3.4729e-31
+	ks-test, g2,p=2.3403e-20
+		Bartletts for equal variances,p=0.26769
 Periphery NORMAL t-test, pval = 0.10985, pbonf(3) = 0.32956, z = 1.5989 r = 0.1142
+	ks-test, g1,p=4.8628e-35
+	ks-test, g2,p=1.06e-23
+		Bartletts for equal variances,p=0.72298
+---BEHAV statistics---
+	Distribution of values in behavioural variable 1 is non-normal
+	Distribution of values in behavioural variable 2 is non-normal
+	Distribution of values in behavioural variable 3 is non-normal
+	Distribution of values in behavioural variable 4 is non-normal
+	Log transformed values in var 1 are still non-normal...
+	Log transformed values in var 2 are still non-normal...
+	Log transformed values in var 3 are still non-normal...
+	Log transformed values in var 4 are still non-normal...
+	Normal transformed values in var 2 are still non-normal...
+1st PCA factor accounts for 80.7173 % variance
+Correlation with all SC-FC r = -0.18021, p = 0.011701
+Correlation with Feeder SC-FC r = -0.25169, p = 0.00038617
+Supplementary result: without PCA each individual behaviour is still negatively correlated with the SC-FC measure, r = -0.23846 -0.21591 -0.16496 -0.22074 and p = 0.00078764 0.0024337 0.021192 0.0019288
+Number of NaNs in feeder matrix across all participants:
+     0     0     0
+     0     0     0
+     0     0     0
+

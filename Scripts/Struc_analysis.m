@@ -34,10 +34,13 @@ disp('---Degree statistics---');
 [P,~,STATS] = ranksum(deg.CTRL,deg.ADHD);
 STATS.r = STATS.zval / sqrt(sum(N));
 disp(['Deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(STATS.r)]);
+normality_tests(deg.CTRL,deg.ADHD);
+%[~,p] = vartest2(deg.CTRL,deg.ADHD);
+%disp([9,'F-test for equal variances,p=',num2str(p)]);
 [P,~,STATS] = ranksum(deg.CTRLw,deg.ADHDw);
 STATS.r = STATS.zval / sqrt(sum(N));
 disp(['Weighted deg t-test, pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(STATS.r)]);
-
+normality_tests(deg.CTRLw,deg.ADHDw);
 
 %% Hubs
 
@@ -58,4 +61,5 @@ for conn = 1:3
     [P,~,STATS] = ranksum(conStren.CTRL(:,conn),conStren.ADHD(:,conn));
     STATS.r = STATS.zval / sqrt(sum(N));
     disp(['Hub STRENGTH t-test- k = ',num2str(K),', conn = ',num2str(conn),' pval = ',num2str(P),' z = ',num2str(STATS.zval),' r = ',num2str(STATS.r)]);
+    normality_tests(conStren.CTRL(:,conn),conStren.ADHD(:,conn));
 end
