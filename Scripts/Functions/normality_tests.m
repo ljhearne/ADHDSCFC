@@ -20,11 +20,11 @@ function normality_tests(data1,data2)
     end
     
     if size(group_data,1) < size(group_data,2)
-        p = vartestn(group_data',group,'display','off');
+        p = vartestn(group_data',group,'TestType','LeveneAbsolute','display','off');
     else
-        p = vartestn(group_data,group,'display','off');
+        p = vartestn(group_data,group,'TestType','LeveneAbsolute','display','off');
     end
-    disp([9,9,'Bartletts for equal variances,p=',num2str(p)]);
+    disp([9,9,'Levenes for equal variances,p=',num2str(p)]);
     %[~,p] = vartest2(data1,data2);
     %disp([9,'F-test for equal variances,p=',num2str(p)]);
 end
