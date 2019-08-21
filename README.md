@@ -3,14 +3,14 @@ This is the code repository for the paper *"ADHD symptoms map onto noise-driven 
 
 Authors: Luke J. Hearne*, Hsiang-Yuan Lin*, Paula Sanz-Leon, Wen-Yih Isaac Tseng, Susan Shur-Fen Gau, James A. Roberts, Luca Cocchi    
 
+For information regarding the code/repository please contact luke.hearne[at]gmail.com . For anything else, you can contact the corresponding author at gaushufe[at]ntu.edu.tw
+
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-01.png" width="500"/><br/><br/><br/>
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-02.png" width="500"/><br/><br/><br/>
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-03.png" width="500"/><br/><br/><br/>
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-04.png" width="500"/><br/><br/><br/>
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-05.png" width="500"/><br/><br/><br/>
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-06.png" width="500"/><br/><br/><br/>
-## Contact
-For information regarding the repository please contact luke.hearne[at]gmail.com otherwise, email the corresponding author from the papers.
 
 ## Instructions for coauthors
 Folders should be organized like so:
