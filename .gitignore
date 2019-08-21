@@ -1,6 +1,9 @@
 
 <<<<<<< HEAD
 /Figures/*.ai
+/Figures/*.eps
+/Figures/*.jpeg
+/Figures/*.svg
 /Figures/*.tif
 /Figures/*.jpg
 /Data
