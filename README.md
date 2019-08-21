@@ -3,8 +3,17 @@ This is the code repository for the paper *"ADHD symptoms map onto noise-driven 
 
 Authors: Luke J. Hearne*, Hsiang-Yuan Lin*, Paula Sanz-Leon, Wen-Yih Isaac Tseng, Susan Shur-Fen Gau, James A. Roberts, Luca Cocchi
 
-![alt text](https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-01.png "Fig. 1 Conceptual overview of the analysis pipeline. A. Analyses were conducted using a whole-brain parcellation including 214 cortical and subcortical regions. Replication analyses were performed using two alternative brain parcellations (see text). B. Structural (SC) and functional connectivity (FC) matrices were derived from diffusion spectrum imaging (DSI) and multi-echo resting-state fMRI data, respectively. Darker colors indicate higher normalized streamline counts (SC) and higher Fisher-z normalized Pearson’s correlation values between every possible pair of brain regions (FC). C. The topological organization of the SC matrices was examined to derive measures of different connection types: hub connections, feeder connections, and local connections. Individual-level correlations between SC and FC were used to estimate structure-function coupling, which was then analyzed with between-group statistics. D. A computational model was used to assess the potential neural mechanisms that lead to decreased structure-function coupling. Empirical SC was used as input in the model and model parameters were estimated by fitting to empirical FC. We systematically assessed if an increase in the noise heterogeneity in hub or peripheral nodes could result in a marked dissociation between functional and structural connectivity.")
+![alt text](https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-01.png "Fig. 1 Conceptual overview of the analysis pipeline.")
 
+![alt text](https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-02.png "Fig. 1 Conceptual overview of the analysis pipeline.")
+
+![alt text](https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-03.png "Fig. 1 Conceptual overview of the analysis pipeline.")
+
+![alt text](https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-04.png "Fig. 1 Conceptual overview of the analysis pipeline.")
+
+![alt text](https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-05.png "Fig. 1 Conceptual overview of the analysis pipeline.")
+
+![alt text](https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-06.png "Fig. 1 Conceptual overview of the analysis pipeline.")
 
 ## Contact
 For information regarding the repository please contact luke.hearne[at]gmail.com otherwise, email the corresponding author from the papers.
