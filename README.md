@@ -8,8 +8,7 @@ Authors: Luke J. Hearne*, Hsiang-Yuan Lin*, Paula Sanz-Leon, Wen-Yih Isaac Tseng
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-02.png" width="500"/><br/>
 **Fig. 2** Structure-function relationships in drug-naïve adults with ADHD and healthy matched controls<br/><br/><br/>
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-03.png" width="500"/><br/>
-**Fig. 2** Structure-function relationships in drug-naïve adults with ADHD and healthy matched controls<br/><br/><br/>
-
+**Fig. 3** Modeling the effect of noise heteroscedasticity on structure-function coupling. <br/><br/><br/>
 
 ## Contact
 For information regarding the repository please contact luke.hearne[at]gmail.com otherwise, email the corresponding author from the papers.
