@@ -4,9 +4,10 @@ This is the code repository for the paper *"ADHD symptoms map onto noise-driven 
 Authors: Luke J. Hearne*, Hsiang-Yuan Lin*, Paula Sanz-Leon, Wen-Yih Isaac Tseng, Susan Shur-Fen Gau, James A. Roberts, Luca Cocchi
 
 <img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-01.png" width="500"/>
-![alt text]( "")
 **Fig. 1** Conceptual overview of the analysis pipeline.
 
+<img src="https://github.com/ljhearne/ADHDSCFC/blob/master/Figures/Figures-02.png" width="500"/>
+**Fig. 2** Structure-function relationships in drug-naïve adults with ADHD and healthy matched controls
 
 ## Contact
 For information regarding the repository please contact luke.hearne[at]gmail.com otherwise, email the corresponding author from the papers.
