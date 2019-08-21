@@ -1,9 +1,10 @@
-# Structure function coupling in ADHD
-###
+# READ ME
+This is the code repository for the paper *"ADHD symptoms map onto noise-driven structure-function decoupling between hub and peripheral brain regions"* available at Molecular Psychiatry here: and via preprint here:
 
-### Contact
 
-### Instructions for coauthors
+## Contact
+luke.hearne[at]gmail.com
+## Instructions for coauthors
 Folders should be organized like so:
 ```
 project folder 
