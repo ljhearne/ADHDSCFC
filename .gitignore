@@ -1,8 +1,8 @@
 
 <<<<<<< HEAD
 /Figures/*.ai
-/Figures/*.tiff
-/Figures/*.jpeg
+/Figures/*.tif
+/Figures/*.jpg
 /Data
 /Writing
 .DS_Store
