@@ -1,5 +1,5 @@
 # READ ME
-This is the code repository for the paper *"ADHD symptoms map onto noise-driven structure-function decoupling between hub and peripheral brain regions"* available at Molecular Psychiatry here: [not yet available] and via preprint here: https://www.biorxiv.org/content/biorxiv/early/2019/04/11/606228.full.pdf
+This is the code repository for the paper *"ADHD symptoms map onto noise-driven structure-function decoupling between hub and peripheral brain regions"* available at Molecular Psychiatry here: [not yet available] and via preprint here: https://www.biorxiv.org/content/10.1101/606228v2
 
 Authors: Luke J. Hearne*, Hsiang-Yuan Lin*, Paula Sanz-Leon, Wen-Yih Isaac Tseng, Susan Shur-Fen Gau, James A. Roberts, Luca Cocchi    
 
